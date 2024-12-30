@@ -27,7 +27,7 @@
 
 3. Push to NuGet:
    ```bash
-   dotnet nuget push .\LocalAI.NET\bin\Release\LocalAI.NET.1.0.0.nupkg --api-key YOUR_API_KEY --source https://api.nuget.org/v3/index.json
+   dotnet nuget push .\LocalAI.NET.KoboldCpp\bin\Release\LocalAI.NET.KoboldCpp.1.0.0.nupkg --api-key YOUR_API_KEY --source https://api.nuget.org/v3/index.json
    ```
    Replace:
    - `1.0.0` with your new version number
