@@ -17,7 +17,7 @@ This package serves as the KoboldCpp integration layer for the [LocalAI.NET](htt
 - Cross-platform compatibility
 - Full async/await support
 
-📦 [View Package on NuGet](https://www.nuget.org/packages/LocalAI.NET)
+📦 [View Package on NuGet](https://www.nuget.org/packages/LocalAI.NET.KoboldCpp)
 
 ## Installation
 Install via NuGet:
