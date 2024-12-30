@@ -7,14 +7,14 @@
 2. Generate an API key:
    - Go to https://www.nuget.org/account/apikeys
    - Click "Create"
-   - Name: "LocalAI.NET Publishing" (or your preferred name)
+   - Name: "LocalAI.NET.KoboldCpp Publishing" (or your preferred name)
    - Expiration: 365 days
    - Select "Push new packages and package versions"
-   - Glob Pattern: "LocalAI.NET*"
+   - Glob Pattern: "LocalAI.NET.KoboldCpp*"
    - Save the generated key securely
 
 ### Publishing Process
-1. Update version in `LocalAI.NET/LocalAI.NET.csproj`:
+1. Update version in `LocalAI.NET.KoboldCpp/LocalAI.NET.KoboldCpp.csproj`:
    ```xml
    <Version>1.0.0</Version>   <!-- Change this to new version -->
    ```
