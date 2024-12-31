@@ -16,7 +16,7 @@
 ### Publishing Process
 1. Update version in `LocalAI.NET.KoboldCpp/LocalAI.NET.KoboldCpp.csproj`:
    ```xml
-   <Version>1.0.0</Version>   <!-- Change this to new version -->
+   <Version>1.0.2</Version>   <!-- Change this to new version -->
    ```
 
 2. Clean and pack:
@@ -27,10 +27,10 @@
 
 3. Push to NuGet:
    ```bash
-   dotnet nuget push .\LocalAI.NET.KoboldCpp\bin\Release\LocalAI.NET.KoboldCpp.1.0.0.nupkg --api-key YOUR_API_KEY --source https://api.nuget.org/v3/index.json
+   dotnet nuget push .\LocalAI.NET.KoboldCpp\bin\Release\LocalAI.NET.KoboldCpp.1.0.2.nupkg --api-key YOUR_API_KEY --source https://api.nuget.org/v3/index.json
    ```
    Replace:
-   - `1.0.0` with your new version number
+   - `1.0.2` with your new version number
    - `YOUR_API_KEY` with your NuGet API key
 
 4. Wait 15-30 minutes for the package to appear on NuGet.org
