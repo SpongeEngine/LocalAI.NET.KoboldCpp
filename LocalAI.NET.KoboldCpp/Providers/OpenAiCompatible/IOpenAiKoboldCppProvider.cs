@@ -1,4 +1,4 @@
-﻿namespace LocalAI.NET.KoboldCpp.Providers.OpenAi
+﻿namespace LocalAI.NET.KoboldCpp.Providers.OpenAiCompatible
 {
     public interface IOpenAiKoboldCppProvider : IDisposable
     {

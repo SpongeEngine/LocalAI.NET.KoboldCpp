@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using LocalAI.NET.KoboldCpp.Models;
 using LocalAI.NET.KoboldCpp.Providers.Native;
-using LocalAI.NET.KoboldCpp.Providers.OpenAi;
+using LocalAI.NET.KoboldCpp.Providers.OpenAiCompatible;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 

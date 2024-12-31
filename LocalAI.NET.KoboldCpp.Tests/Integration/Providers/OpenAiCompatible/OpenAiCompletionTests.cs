@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
-using LocalAI.NET.KoboldCpp.Providers.OpenAi;
+using LocalAI.NET.KoboldCpp.Providers.OpenAiCompatible;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace LocalAI.NET.KoboldCpp.Tests.Integration.Providers.OpenAi
+namespace LocalAI.NET.KoboldCpp.Tests.Integration.Providers.OpenAiCompatible
 {
     [Trait("Category", "Integration")]
     [Trait("API", "OpenAI")]

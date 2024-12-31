@@ -1,14 +1,11 @@
-﻿using System.Net.Http.Json;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using LocalAI.NET.KoboldCpp.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using JsonException = Newtonsoft.Json.JsonException;
 
-namespace LocalAI.NET.KoboldCpp.Providers.OpenAi
+namespace LocalAI.NET.KoboldCpp.Providers.OpenAiCompatible
 {
     public class OpenAiKoboldCppProvider : IOpenAiKoboldCppProvider
     {

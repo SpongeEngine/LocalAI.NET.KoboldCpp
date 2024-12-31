@@ -1,12 +1,12 @@
 ﻿using FluentAssertions;
-using LocalAI.NET.KoboldCpp.Providers.OpenAi;
+using LocalAI.NET.KoboldCpp.Providers.OpenAiCompatible;
 using LocalAI.NET.KoboldCpp.Tests.Common;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace LocalAI.NET.KoboldCpp.Tests.Unit.Providers.OpenAi
+namespace LocalAI.NET.KoboldCpp.Tests.Unit.Providers.OpenAiCompatible
 {
     public class OpenAiKoboldCppProviderTests : KoboldCppTestBase
     {

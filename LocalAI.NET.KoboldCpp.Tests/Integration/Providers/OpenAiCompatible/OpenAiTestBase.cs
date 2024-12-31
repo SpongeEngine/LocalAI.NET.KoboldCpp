@@ -1,11 +1,11 @@
-﻿using LocalAI.NET.KoboldCpp.Providers.OpenAi;
+﻿using LocalAI.NET.KoboldCpp.Providers.OpenAiCompatible;
 using LocalAI.NET.KoboldCpp.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace LocalAI.NET.KoboldCpp.Tests.Integration.Providers.OpenAi
+namespace LocalAI.NET.KoboldCpp.Tests.Integration.Providers.OpenAiCompatible
 {
     public abstract class OpenAiTestBase : IAsyncLifetime
     {
