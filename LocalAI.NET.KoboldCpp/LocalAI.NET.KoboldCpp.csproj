@@ -8,10 +8,10 @@
         <!-- Package Info -->
         <PackageId>LocalAI.NET.KoboldCpp</PackageId>
         <Title>LocalAI.NET.KoboldCpp</Title>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <Authors>Dan Clipca</Authors>
         <Company>Sponge Engine</Company>
-        <Description>A modern .NET client library for interacting with local LLM providers like KoboldCpp, Ollama, LM Studio, and Text Generation WebUI. This library provides a simple, efficient, and cross-platform way to use local AI models in your .NET applications.</Description>
+        <Description>A .NET client library for KoboldCpp, providing a simple and efficient way to interact with KoboldCpp's text generation capabilities in your .NET applications. This library offers support for both KoboldCpp's native API and its OpenAI-compatible endpoints. This package serves as the KoboldCpp integration layer for the LocalAI.NET ecosystem.</Description>
 
         <!-- Package Details -->
         <PackageTags>llm, ai, openai, localai, koboldcpp, ollama, lm-studio, text-generation-webui, 
