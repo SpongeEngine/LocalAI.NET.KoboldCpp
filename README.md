@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/github/license/SpongeEngine/KoboldSharp)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-6.0%20%7C%207.0%20%7C%208.0%2B-512BD4)](https://dotnet.microsoft.com/download)
 
-A .NET client library for KoboldCpp, providing a simple and efficient way to interact with KoboldCpp's text generation capabilities in your .NET applications. This library offers support for both KoboldCpp's native API and its OpenAI-compatible endpoints.
+C# client for interacting with KoboldCpp through its native an OpenAI-compatible endpoints.
 
 ## Features
 - Complete support for KoboldCpp's native API
