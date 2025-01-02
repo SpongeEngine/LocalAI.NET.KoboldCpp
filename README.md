@@ -1,12 +1,10 @@
-# LocalAI.NET.KoboldCpp
-[![NuGet](https://img.shields.io/nuget/v/LocalAI.NET.KoboldCpp.svg)](https://www.nuget.org/packages/LocalAI.NET.KoboldCpp)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/LocalAI.NET.KoboldCpp.svg)](https://www.nuget.org/packages/LocalAI.NET.KoboldCpp)
-[![License](https://img.shields.io/github/license/SpongeEngine/LocalAI.NET.KoboldCpp)](LICENSE)
+# KoboldSharp
+[![NuGet](https://img.shields.io/nuget/v/SpongeEngine.KoboldSharp.svg)](https://www.nuget.org/packages/SpongeEngine.KoboldSharp)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/SpongeEngine.KoboldSharp.svg)](https://www.nuget.org/packages/SpongeEngine.KoboldSharp)
+[![License](https://img.shields.io/github/license/SpongeEngine/KoboldSharp)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-6.0%20%7C%207.0%20%7C%208.0%2B-512BD4)](https://dotnet.microsoft.com/download)
 
 A .NET client library for KoboldCpp, providing a simple and efficient way to interact with KoboldCpp's text generation capabilities in your .NET applications. This library offers support for both KoboldCpp's native API and its OpenAI-compatible endpoints.
-
-This package serves as the KoboldCpp integration layer for the [LocalAI.NET](https://github.com/SpongeEngine/LocalAI.NET) ecosystem.
 
 ## Features
 - Complete support for KoboldCpp's native API
@@ -17,23 +15,23 @@ This package serves as the KoboldCpp integration layer for the [LocalAI.NET](htt
 - Cross-platform compatibility
 - Full async/await support
 
-📦 [View Package on NuGet](https://www.nuget.org/packages/LocalAI.NET.KoboldCpp)
+📦 [View Package on NuGet](https://www.nuget.org/packages/SpongeEngine.KoboldSharp)
 
 ## Installation
 Install via NuGet:
 ```bash
-dotnet add package LocalAI.NET.KoboldCpp
+dotnet add package SpongeEngine.KoboldSharp
 ```
 
 ## Quick Start
 
 ### Using Native API
 ```csharp
-using LocalAI.NET.KoboldCpp.Client;
-using LocalAI.NET.KoboldCpp.Models;
+using SpongeEngine.KoboldSharp.Client;
+using SpongeEngine.KoboldSharp.Models;
 
 // Configure the client
-var options = new KoboldCppOptions
+var options = new KoboldSharpOptions
 {
     BaseUrl = "http://localhost:5001",
     UseGpu = true,
@@ -41,10 +39,10 @@ var options = new KoboldCppOptions
 };
 
 // Create client instance
-using var client = new KoboldCppClient(options);
+using var client = new KoboldSharpClient(options);
 
 // Generate completion
-var request = new KoboldCppRequest
+var request = new KoboldSharpRequest
 {
     Prompt = "Write a short story about a robot:",
     MaxLength = 200,
@@ -64,13 +62,13 @@ await foreach (var token in client.GenerateStreamAsync(request))
 
 ### Using OpenAI-Compatible API
 ```csharp
-var options = new KoboldCppOptions
+var options = new KoboldSharpOptions
 {
     BaseUrl = "http://localhost:5001",
     UseOpenAiApi = true
 };
 
-using var client = new KoboldCppClient(options);
+using var client = new KoboldSharpClient(options);
 
 // Simple completion
 string response = await client.CompleteAsync(
@@ -95,7 +93,7 @@ await foreach (var token in client.StreamCompletionAsync(
 
 ### Basic Options
 ```csharp
-var options = new KoboldCppOptions
+var options = new KoboldSharpOptions
 {
     BaseUrl = "http://localhost:5001",    // KoboldCpp server URL
     ApiKey = "optional_api_key",          // Optional API key
@@ -108,25 +106,25 @@ var options = new KoboldCppOptions
 
 ### Advanced Generation Parameters
 ```csharp
-var request = new KoboldCppRequest
+var request = new KoboldSharpRequest
 {
     Prompt = "Your prompt here",
     MaxLength = 200,                      // Maximum tokens to generate
     MaxContextLength = 2048,              // Maximum context length
     Temperature = 0.7f,                   // Randomness (0.0-1.0)
-    TopP = 0.9f,                          // Nucleus sampling threshold
-    TopK = 40,                            // Top-K sampling
-    TopA = 0.0f,                          // Top-A sampling
-    Typical = 1.0f,                       // Typical sampling
+    TopP = 0.9f,                         // Nucleus sampling threshold
+    TopK = 40,                           // Top-K sampling
+    TopA = 0.0f,                         // Top-A sampling
+    Typical = 1.0f,                      // Typical sampling
     Tfs = 1.0f,                          // Tail-free sampling
     RepetitionPenalty = 1.1f,            // Repetition penalty
     RepetitionPenaltyRange = 64,         // Penalty range
     StopSequences = new List<string> { "\n" },  // Stop sequences
     Stream = false,                       // Enable streaming
-    TrimStop = true,                     // Trim stop sequences
-    MirostatMode = 0,                    // Mirostat sampling mode
-    MirostatTau = 5.0f,                  // Mirostat target entropy
-    MirostatEta = 0.1f                   // Mirostat learning rate
+    TrimStop = true,                      // Trim stop sequences
+    MirostatMode = 0,                     // Mirostat sampling mode
+    MirostatTau = 5.0f,                   // Mirostat target entropy
+    MirostatEta = 0.1f                    // Mirostat learning rate
 };
 ```
 
@@ -136,7 +134,7 @@ try
 {
     var response = await client.GenerateAsync(request);
 }
-catch (KoboldCppException ex)
+catch (KoboldSharpException ex)
 {
     Console.WriteLine($"KoboldCpp error: {ex.Message}");
     Console.WriteLine($"Provider: {ex.Provider}");
@@ -163,9 +161,9 @@ ILogger logger = LoggerFactory
     .Create(builder => builder
         .AddConsole()
         .SetMinimumLevel(LogLevel.Debug))
-    .CreateLogger<KoboldCppClient>();
+    .CreateLogger<KoboldSharpClient>();
 
-var client = new KoboldCppClient(options, logger);
+var client = new KoboldSharpClient(options, logger);
 ```
 
 ## JSON Serialization
@@ -178,7 +176,7 @@ var jsonSettings = new JsonSerializerSettings
     DefaultValueHandling = DefaultValueHandling.Ignore
 };
 
-var client = new KoboldCppClient(options, jsonSettings: jsonSettings);
+var client = new KoboldSharpClient(options, jsonSettings: jsonSettings);
 ```
 
 ## Testing
@@ -203,4 +201,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Support
-For issues and feature requests, please use the [GitHub issues page](https://github.com/SpongeEngine/LocalAI.NET.KoboldCpp/issues).
+For issues and feature requests, please use the [GitHub issues page](https://github.com/SpongeEngine/KoboldSharp/issues).
