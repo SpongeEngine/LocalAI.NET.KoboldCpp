@@ -1,8 +1,11 @@
 # KoboldSharp
 [![NuGet](https://img.shields.io/nuget/v/SpongeEngine.KoboldSharp.svg)](https://www.nuget.org/packages/SpongeEngine.KoboldSharp)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/SpongeEngine.KoboldSharp.svg)](https://www.nuget.org/packages/SpongeEngine.KoboldSharp)
+[![Tests](https://github.com/SpongeEngine/KoboldSharp/actions/workflows/test.yml/badge.svg)](https://github.com/SpongeEngine/KoboldSharp/actions/workflows/test.yml)
 [![License](https://img.shields.io/github/license/SpongeEngine/KoboldSharp)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-6.0%20%7C%207.0%20%7C%208.0%2B-512BD4)](https://dotnet.microsoft.com/download)
+
+C# client for interacting with KoboldCpp through its native and OpenAI-compatible endpoints.
 
 C# client for interacting with KoboldCpp through its native and OpenAI-compatible endpoints.
 
