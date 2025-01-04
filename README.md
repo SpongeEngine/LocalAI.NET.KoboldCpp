@@ -7,8 +7,6 @@
 
 C# client for interacting with KoboldCpp through its native and OpenAI-compatible endpoints.
 
-C# client for interacting with KoboldCpp through its native and OpenAI-compatible endpoints.
-
 ## Features
 - Complete support for KoboldCpp's native API
 - OpenAI-compatible API endpoint support
