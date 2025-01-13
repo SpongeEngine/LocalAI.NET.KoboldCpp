@@ -2,15 +2,15 @@
 using WireMock.Server;
 using Xunit.Abstractions;
 
-namespace SpongeEngine.KoboldSharp.Tests.Common
+namespace SpongeEngine.KoboldSharp.Tests.Unit
 {
-    public abstract class TestBase : IDisposable
+    public abstract class UnitTestBase : IDisposable
     {
         protected readonly WireMockServer Server;
         protected readonly ILogger Logger;
         protected readonly string BaseUrl;
 
-        protected TestBase(ITestOutputHelper output)
+        protected UnitTestBase(ITestOutputHelper output)
         {
             Server = WireMockServer.Start();
             BaseUrl = Server.Urls[0];

@@ -3,13 +3,13 @@ using SpongeEngine.KoboldSharp.Models;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
+namespace SpongeEngine.KoboldSharp.Tests.Integration
 {
     [Trait("Category", "Integration")]
     [Trait("API", "Native")]
-    public class NativeGenerationTests : NativeTestBase
+    public class IntegrationTests : IntegrationTestBase
     {
-        public NativeGenerationTests(ITestOutputHelper output) : base(output) { }
+        public IntegrationTests(ITestOutputHelper output) : base(output) { }
 
         [SkippableFact]
         [Trait("Category", "Integration")]
@@ -30,7 +30,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
             };
 
             // Act
-            KoboldSharpResponse response = await Provider.GenerateAsync(request);
+            KoboldSharpResponse response = await Client.GenerateAsync(request);
 
             // Assert
             response.Should().NotBeNull();
@@ -61,7 +61,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
 
             try
             {
-                await foreach (String token in Provider.GenerateStreamAsync(request, cts.Token))
+                await foreach (String token in Client.GenerateStreamAsync(request, cts.Token))
                 {
                     tokens.Add(token);
                     Output.WriteLine($"Received token: {token}");
@@ -104,7 +104,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
             };
 
             // Act
-            KoboldSharpResponse response = await Provider.GenerateAsync(request);
+            KoboldSharpResponse response = await Client.GenerateAsync(request);
 
             // Assert
             response.Should().NotBeNull();
@@ -135,7 +135,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
                 };
 
                 // Act
-                KoboldSharpResponse response = await Provider.GenerateAsync(request);
+                KoboldSharpResponse response = await Client.GenerateAsync(request);
 
                 // Assert
                 response.Should().NotBeNull();

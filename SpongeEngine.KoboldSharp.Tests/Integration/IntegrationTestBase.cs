@@ -1,20 +1,19 @@
 ﻿using Microsoft.Extensions.Logging;
-using SpongeEngine.KoboldSharp.Providers.KoboldSharpNative;
 using SpongeEngine.KoboldSharp.Tests.Common;
 using SpongeEngine.LLMSharp.Core.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
+namespace SpongeEngine.KoboldSharp.Tests.Integration
 {
-    public abstract class NativeTestBase : IAsyncLifetime
+    public abstract class IntegrationTestBase : IAsyncLifetime
     {
-        protected readonly KoboldSharpNativeProvider Provider;
+        protected readonly KoboldSharpClient Client;
         protected readonly ITestOutputHelper Output;
         protected readonly ILogger Logger;
         protected bool ServerAvailable;
 
-        protected NativeTestBase(ITestOutputHelper output)
+        protected IntegrationTestBase(ITestOutputHelper output)
         {
             Output = output;
             Logger = LoggerFactory
@@ -27,18 +26,18 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
                 Timeout = TimeSpan.FromSeconds(TestConfig.TimeoutSeconds)
             };
 
-            Provider = new KoboldSharpNativeProvider(httpClient, new LlmOptions(), "", TestConfig.BaseUrl, Logger);
+            Client = new KoboldSharpClient(httpClient, new LlmOptions(), "", TestConfig.BaseUrl, Logger);
         }
 
         public async Task InitializeAsync()
         {
             try
             {
-                ServerAvailable = await Provider.IsAvailableAsync();
+                ServerAvailable = await Client.IsAvailableAsync();
                 if (ServerAvailable)
                 {
                     Output.WriteLine("KoboldCpp server is available");
-                    var modelInfo = await Provider.GetModelInfoAsync();
+                    var modelInfo = await Client.GetModelInfoAsync();
                     Output.WriteLine($"Connected to model: {modelInfo.ModelName}");
                 }
                 else
@@ -56,7 +55,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
 
         public Task DisposeAsync()
         {
-            if (Provider is IDisposable disposable)
+            if (Client is IDisposable disposable)
             {
                 disposable.Dispose();
             }

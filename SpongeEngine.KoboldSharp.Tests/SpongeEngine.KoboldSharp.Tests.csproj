@@ -28,9 +28,4 @@
         <PackageReference Include="Xunit.SkippableFact" Version="1.5.23" />
         <ProjectReference Include="..\SpongeEngine.KoboldSharp\SpongeEngine.KoboldSharp.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Integration\Providers\" />
-      <Folder Include="Unit\Providers\" />
-    </ItemGroup>
 </Project>

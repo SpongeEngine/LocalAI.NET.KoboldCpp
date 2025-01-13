@@ -11,11 +11,11 @@ using SpongeEngine.LLMSharp.Core.Configuration;
 using JsonException = System.Text.Json.JsonException;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
+namespace SpongeEngine.KoboldSharp
 {
-    public class KoboldSharpNativeProvider : BaseLlmProvider
+    public class KoboldSharpClient : BaseLlmProvider
     {
-        public KoboldSharpNativeProvider(HttpClient httpClient, LlmOptions llmOptions, string name, string baseUrl, ILogger? logger = null) : base(httpClient, llmOptions, logger)
+        public KoboldSharpClient(HttpClient? httpClient, LlmOptions? llmOptions, string name, string baseUrl, ILogger? logger = null): base(httpClient ?? new HttpClient(), llmOptions ?? new LlmOptions(), logger)
         {
             Name = name;
             BaseUrl = baseUrl;
