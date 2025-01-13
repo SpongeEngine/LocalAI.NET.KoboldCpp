@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI;
 using SpongeEngine.KoboldSharp.Tests.Common;
+using SpongeEngine.LLMSharp.Core.Configuration;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using Xunit;
@@ -16,7 +17,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.Providers.KoboldSharpOpenAI
         public KoboldSharpOpenAiProviderTests(ITestOutputHelper output) : base(output)
         {
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
-            _provider = new KoboldSharpOpenAiProvider(_httpClient, logger: Logger);
+            _provider = new KoboldSharpOpenAiProvider(_httpClient, new LlmOptions(), "", "");
         }
 
         [Fact]

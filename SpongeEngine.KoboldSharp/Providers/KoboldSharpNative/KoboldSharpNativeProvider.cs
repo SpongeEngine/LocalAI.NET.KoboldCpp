@@ -4,34 +4,29 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SpongeEngine.KoboldSharp.Models;
-using SpongeEngine.KoboldSharp.Utils;
+using SpongeEngine.LLMSharp.Core.Base;
+using SpongeEngine.LLMSharp.Core.Configuration;
 using JsonException = Newtonsoft.Json.JsonException;
 
 namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
 {
-    public class KoboldSharpNativeProvider : IKoboldSharpNativeProvider
+    public class KoboldSharpNativeProvider : BaseLlmProvider
     {
-        private readonly HttpClient _httpClient;
-        private readonly ILogger? _logger;
-        private readonly JsonSerializerSettings? _jsonSettings;
-        private bool _disposed;
-
-        public KoboldSharpNativeProvider(HttpClient httpClient, ILogger? logger = null, JsonSerializerSettings? jsonSettings = null)
+        public KoboldSharpNativeProvider(HttpClient httpClient, LlmOptions options, string name, string baseUrl, ILogger? logger = null) : base(httpClient, options, logger)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            _logger = logger;
-            _jsonSettings = jsonSettings;
+            Name = name;
+            BaseUrl = baseUrl;
         }
 
         public async Task<KoboldSharpResponse> GenerateAsync(
             KoboldSharpRequest request,
             CancellationToken cancellationToken = default)
         {
-            KoboldCppUtils.ValidateRequest(request);
+            //KoboldCppUtils.ValidateRequest(request);
 
             try
             {
-                var requestJson = JsonConvert.SerializeObject(request, _jsonSettings);
+                var requestJson = JsonConvert.SerializeObject(request);
                 _logger?.LogDebug("Generation request: {Request}", requestJson);
 
                 var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
@@ -52,7 +47,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
                 }
 
                 try {
-                    var result = JsonConvert.DeserializeObject<KoboldSharpResponse>(responseContent, _jsonSettings);
+                    var result = JsonConvert.DeserializeObject<KoboldSharpResponse>(responseContent);
                     if (result == null)
                     {
                         _logger?.LogError("Deserialized response is null");
@@ -98,7 +93,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
         {
             request.Stream = true;
             var content = new StringContent(
-                JsonConvert.SerializeObject(request, _jsonSettings),
+                JsonConvert.SerializeObject(request),
                 Encoding.UTF8,
                 "application/json");
 
@@ -138,7 +133,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
                 string? token = null;
                 try
                 {
-                    var streamResponse = JsonConvert.DeserializeObject<StreamResponse>(data, _jsonSettings);
+                    var streamResponse = JsonConvert.DeserializeObject<StreamResponse>(data);
                     token = streamResponse?.Token;
                 }
                 catch (JsonException ex)
@@ -171,7 +166,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
                         content);
                 }
 
-                return JsonConvert.DeserializeObject<KoboldSharpModelInfo>(content, _jsonSettings)
+                return JsonConvert.DeserializeObject<KoboldSharpModelInfo>(content)
                     ?? throw new KoboldSharpException("Failed to deserialize model info");
             }
             catch (Exception ex) when (ex is not KoboldSharpException)
@@ -180,6 +175,10 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
             }
         }
 
+        public override string Name { get; }
+        public override string? Version { get; }
+        public override bool SupportsStreaming { get; }
+        public override string BaseUrl { get; }
         public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
         {
             try
@@ -191,6 +190,10 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
             {
                 return false;
             }
+        }
+        public override Task<IDictionary<string, object>> GetCapabilitiesAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
 
         private class StreamResponse

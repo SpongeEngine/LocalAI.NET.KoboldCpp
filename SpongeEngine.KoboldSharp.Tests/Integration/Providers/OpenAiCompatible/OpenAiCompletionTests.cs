@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI;
+using SpongeEngine.LLMSharp.Core.Models;
 using Xunit;
 using Xunit.Abstractions;
 

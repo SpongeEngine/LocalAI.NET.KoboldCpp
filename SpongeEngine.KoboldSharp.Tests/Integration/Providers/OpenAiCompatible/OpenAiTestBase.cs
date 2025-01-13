@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI;
 using SpongeEngine.KoboldSharp.Tests.Common;
+using SpongeEngine.LLMSharp.Core.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,7 +10,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.OpenAiCompatible
 {
     public abstract class OpenAiTestBase : IAsyncLifetime
     {
-        protected readonly IKoboldSharpOpenAiProvider Provider;
+        protected readonly KoboldSharpOpenAiProvider Provider;
         protected readonly ITestOutputHelper Output;
         protected readonly ILogger Logger;
         protected bool ServerAvailable;
@@ -33,10 +34,11 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.OpenAiCompatible
             };
 
             Provider = new KoboldSharpOpenAiProvider(
-                httpClient, 
-                modelName: "koboldcpp",
-                logger: Logger, 
-                jsonSettings: jsonSettings);
+                httpClient,
+                new LlmOptions(),
+                "KoboldCpp",
+                "",
+                logger: Logger);
         }
 
         public async Task InitializeAsync()

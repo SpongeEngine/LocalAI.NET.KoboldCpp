@@ -3,28 +3,30 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SpongeEngine.KoboldSharp.Models;
+using SpongeEngine.LLMSharp.Core.Base;
+using SpongeEngine.LLMSharp.Core.Configuration;
+using SpongeEngine.LLMSharp.Core.Models;
 using JsonException = Newtonsoft.Json.JsonException;
 
 namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
 {
-    public class KoboldSharpOpenAiProvider : IKoboldSharpOpenAiProvider
+    public class KoboldSharpOpenAiProvider: BaseLlmProvider
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger? _logger;
-        private readonly JsonSerializerSettings? _jsonSettings;
         private readonly string _modelName;
         private bool _disposed;
 
         public KoboldSharpOpenAiProvider(
             HttpClient httpClient, 
-            string modelName = "koboldcpp",
-            ILogger? logger = null,
-            JsonSerializerSettings? jsonSettings = null)
+            LlmOptions options, string name, string baseUrl, string modelName = "koboldcpp",
+            ILogger? logger = null): base(httpClient, options, logger)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            Name = name;
+            BaseUrl = baseUrl;
             _modelName = modelName;
             _logger = logger;
-            _jsonSettings = jsonSettings;
         }
 
         public async Task<string> CompleteAsync(
@@ -44,7 +46,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
             };
 
             var content = new StringContent(
-                JsonConvert.SerializeObject(request, _jsonSettings),
+                JsonConvert.SerializeObject(request),
                 Encoding.UTF8,
                 "application/json");
 
@@ -60,7 +62,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
                     responseContent);
             }
 
-            var result = JsonConvert.DeserializeObject<OpenAiResponse>(responseContent, _jsonSettings);
+            var result = JsonConvert.DeserializeObject<OpenAiResponse>(responseContent);
             return result?.Choices.FirstOrDefault()?.Text ?? string.Empty;
         }
 
@@ -80,7 +82,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
                 stream = true
             };
 
-            var requestJson = JsonConvert.SerializeObject(request, _jsonSettings);
+            var requestJson = JsonConvert.SerializeObject(request);
             _logger?.LogDebug("OpenAI streaming request: {Payload}", requestJson);
 
             var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
@@ -143,6 +145,10 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
             }
         }
 
+        public override string Name { get; }
+        public override string? Version { get; }
+        public override bool SupportsStreaming { get; }
+        public override string BaseUrl { get; }
         public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
         {
             try
@@ -154,6 +160,10 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
             {
                 return false;
             }
+        }
+        public override Task<IDictionary<string, object>> GetCapabilitiesAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
 
         private class OpenAiResponse

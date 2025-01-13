@@ -2,6 +2,7 @@
 using SpongeEngine.KoboldSharp.Models;
 using SpongeEngine.KoboldSharp.Providers.KoboldSharpNative;
 using SpongeEngine.KoboldSharp.Tests.Common;
+using SpongeEngine.LLMSharp.Core.Configuration;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using Xunit;
@@ -17,7 +18,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.Providers.KoboldSharpNative
         public KoboldSharpNativeProviderTests(ITestOutputHelper output) : base(output)
         {
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
-            _provider = new KoboldSharpNativeProvider(_httpClient, Logger);
+            _provider = new KoboldSharpNativeProvider(_httpClient, new LlmOptions(), "KoboldCpp", TestConfig.BaseUrl, Logger);
         }
 
         [Fact]

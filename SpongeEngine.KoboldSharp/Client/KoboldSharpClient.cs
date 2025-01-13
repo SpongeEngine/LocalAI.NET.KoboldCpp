@@ -4,13 +4,15 @@ using Newtonsoft.Json;
 using SpongeEngine.KoboldSharp.Models;
 using SpongeEngine.KoboldSharp.Providers.KoboldSharpNative;
 using SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI;
+using SpongeEngine.LLMSharp.Core.Configuration;
+using SpongeEngine.LLMSharp.Core.Models;
 
 namespace SpongeEngine.KoboldSharp.Client
 {
     public class KoboldSharpClient : IDisposable
     {
-        private readonly IKoboldSharpNativeProvider? _nativeProvider;
-        private readonly IKoboldSharpOpenAiProvider? _openAiProvider;
+        private readonly KoboldSharpNativeProvider? _nativeProvider;
+        private readonly KoboldSharpOpenAiProvider? _openAiProvider;
         private readonly KoboldSharpOptions _options;
         private bool _disposed;
 
@@ -38,11 +40,11 @@ namespace SpongeEngine.KoboldSharp.Client
 
             if (options.UseOpenAiApi)
             {
-                _openAiProvider = new KoboldSharpOpenAiProvider(httpClient, logger: logger, jsonSettings: jsonSettings);
+                _openAiProvider = new KoboldSharpOpenAiProvider(httpClient, new LlmOptions(), Name, "", logger: logger);
             }
             else
             {
-                _nativeProvider = new KoboldSharpNativeProvider(httpClient, logger: logger, jsonSettings: jsonSettings);
+                _nativeProvider = new KoboldSharpNativeProvider(httpClient, new LlmOptions(), Name, "", logger);
             }
         }
 

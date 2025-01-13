@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SpongeEngine.KoboldSharp.Providers.KoboldSharpNative;
 using SpongeEngine.KoboldSharp.Tests.Common;
+using SpongeEngine.LLMSharp.Core.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,7 +10,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
 {
     public abstract class NativeTestBase : IAsyncLifetime
     {
-        protected readonly IKoboldSharpNativeProvider Provider;
+        protected readonly KoboldSharpNativeProvider Provider;
         protected readonly ITestOutputHelper Output;
         protected readonly ILogger Logger;
         protected bool ServerAvailable;
@@ -32,7 +33,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
                 NullValueHandling = NullValueHandling.Ignore
             };
 
-            Provider = new KoboldSharpNativeProvider(httpClient, Logger, jsonSettings);
+            Provider = new KoboldSharpNativeProvider(httpClient, new LlmOptions(), "", TestConfig.BaseUrl, Logger);
         }
 
         public async Task InitializeAsync()

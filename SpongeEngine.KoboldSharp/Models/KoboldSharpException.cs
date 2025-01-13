@@ -21,7 +21,7 @@
         public KoboldSharpException(string message) : base(message)
         {
             Provider = "KoboldCpp";
-        }
+        } 
 
         public KoboldSharpException(string message, Exception innerException) 
             : base(message, innerException)

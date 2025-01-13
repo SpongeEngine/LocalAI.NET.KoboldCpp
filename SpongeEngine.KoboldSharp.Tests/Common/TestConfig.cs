@@ -2,13 +2,11 @@
 {
     public static class TestConfig
     {
-        private const string DefaultHost = "http://localhost:5001";
+        public const string BaseUrl = "http://localhost:5001";
 
-        public static string NativeApiBaseUrl => 
-            Environment.GetEnvironmentVariable("KOBOLDCPP_BASE_URL") ?? $"{DefaultHost}/api";
+        public static string NativeApiBaseUrl => Environment.GetEnvironmentVariable("KOBOLDCPP_BASE_URL") ?? $"{BaseUrl}/api";
 
-        public static string OpenAiApiBaseUrl => 
-            Environment.GetEnvironmentVariable("KOBOLDCPP_OPENAI_BASE_URL") ?? $"{DefaultHost}/v1";
+        public static string OpenAiApiBaseUrl => Environment.GetEnvironmentVariable("KOBOLDCPP_OPENAI_BASE_URL") ?? $"{BaseUrl}/v1";
             
         // Extended timeout for large models
         public static int TimeoutSeconds => 120;
