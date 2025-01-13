@@ -26,7 +26,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
                 Timeout = TimeSpan.FromSeconds(TestConfig.TimeoutSeconds)
             };
 
-            Client = new KoboldSharpClient(httpClient, new LlmOptions(), "", TestConfig.BaseUrl, Logger);
+            Client = new KoboldSharpClient(httpClient, new LlmClientOptions(), "", TestConfig.BaseUrl, Logger);
         }
 
         public async Task InitializeAsync()

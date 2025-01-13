@@ -17,7 +17,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit
         public UnitTests(ITestOutputHelper output) : base(output)
         {
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
-            _client = new KoboldSharpClient(_httpClient, new LlmOptions(), "KoboldCpp", TestConfig.BaseUrl, Logger);
+            _client = new KoboldSharpClient(_httpClient, new LlmClientOptions(), "KoboldCpp", TestConfig.BaseUrl, Logger);
         }
         
                 [Fact]

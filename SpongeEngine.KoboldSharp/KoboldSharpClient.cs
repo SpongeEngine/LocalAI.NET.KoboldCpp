@@ -13,9 +13,9 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SpongeEngine.KoboldSharp
 {
-    public class KoboldSharpClient : BaseLlmProvider
+    public class KoboldSharpClient : LlmClientBase
     {
-        public KoboldSharpClient(HttpClient? httpClient, LlmOptions? llmOptions, string name, string baseUrl, ILogger? logger = null): base(httpClient ?? new HttpClient(), llmOptions ?? new LlmOptions(), logger)
+        public KoboldSharpClient(HttpClient? httpClient, LlmClientOptions? llmOptions, string name, string baseUrl, ILogger? logger = null): base(httpClient ?? new HttpClient(), llmOptions ?? new LlmClientOptions(), logger)
         {
             Name = name;
             BaseUrl = baseUrl;
@@ -25,7 +25,7 @@ namespace SpongeEngine.KoboldSharp
         {
             //KoboldCppUtils.ValidateRequest(request);
             
-            JsonSerializerOptions jsonSerializerOptions = customJsonSerializerOptions ?? LlmOptions.JsonSerializerOptions;
+            JsonSerializerOptions jsonSerializerOptions = customJsonSerializerOptions ?? LlmClientOptions.JsonSerializerOptions;
 
             try
             {
@@ -95,7 +95,7 @@ namespace SpongeEngine.KoboldSharp
         {
             request.Stream = true;
             
-            JsonSerializerOptions jsonSerializerOptions = customJsonSerializerOptions ?? LlmOptions.JsonSerializerOptions;
+            JsonSerializerOptions jsonSerializerOptions = customJsonSerializerOptions ?? LlmClientOptions.JsonSerializerOptions;
 
             using HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/extra/generate/stream");
             httpRequest.Content = JsonContent.Create(request, options: jsonSerializerOptions);
