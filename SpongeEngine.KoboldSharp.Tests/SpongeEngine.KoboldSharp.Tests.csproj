@@ -26,7 +26,6 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Xunit.SkippableFact" Version="1.5.23" />
-        <ProjectReference Include="..\..\LLMSharp.Core\SpongeEngine.LLMSharp.Core\SpongeEngine.LLMSharp.Core.csproj" />
         <ProjectReference Include="..\SpongeEngine.KoboldSharp\SpongeEngine.KoboldSharp.csproj" />
     </ItemGroup>
 

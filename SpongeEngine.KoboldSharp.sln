@@ -3,8 +3,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpongeEngine.KoboldSharp", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpongeEngine.KoboldSharp.Tests", "SpongeEngine.KoboldSharp.Tests\SpongeEngine.KoboldSharp.Tests.csproj", "{B4C06852-1A11-45B9-8E83-CF7ABEE36F12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpongeEngine.LLMSharp.Core", "..\LLMSharp.Core\SpongeEngine.LLMSharp.Core\SpongeEngine.LLMSharp.Core.csproj", "{EEA688F1-6BB9-42BB-9DC9-B4B894559A05}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,9 +17,5 @@ Global
 		{B4C06852-1A11-45B9-8E83-CF7ABEE36F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4C06852-1A11-45B9-8E83-CF7ABEE36F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4C06852-1A11-45B9-8E83-CF7ABEE36F12}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EEA688F1-6BB9-42BB-9DC9-B4B894559A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EEA688F1-6BB9-42BB-9DC9-B4B894559A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EEA688F1-6BB9-42BB-9DC9-B4B894559A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EEA688F1-6BB9-42BB-9DC9-B4B894559A05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
