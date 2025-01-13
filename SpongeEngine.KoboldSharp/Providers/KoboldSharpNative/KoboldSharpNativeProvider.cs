@@ -18,15 +18,13 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
             BaseUrl = baseUrl;
         }
 
-        public async Task<KoboldSharpResponse> GenerateAsync(
-            KoboldSharpRequest request,
-            CancellationToken cancellationToken = default)
+        public async Task<KoboldSharpResponse> GenerateAsync(KoboldSharpRequest request, CancellationToken cancellationToken = default, JsonSerializerSettings? jsonSerializerSettings = null)
         {
             //KoboldCppUtils.ValidateRequest(request);
 
             try
             {
-                var requestJson = JsonConvert.SerializeObject(request);
+                var requestJson = JsonConvert.SerializeObject(request, jsonSerializerSettings);
                 _logger?.LogDebug("Generation request: {Request}", requestJson);
 
                 var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
@@ -87,13 +85,11 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
             }
         }
 
-        public async IAsyncEnumerable<string> GenerateStreamAsync(
-            KoboldSharpRequest request,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<string> GenerateStreamAsync(KoboldSharpRequest request, [EnumeratorCancellation] CancellationToken cancellationToken = default, JsonSerializerSettings? jsonSerializerSettings = null)
         {
             request.Stream = true;
             var content = new StringContent(
-                JsonConvert.SerializeObject(request),
+                JsonConvert.SerializeObject(request, jsonSerializerSettings),
                 Encoding.UTF8,
                 "application/json");
 
