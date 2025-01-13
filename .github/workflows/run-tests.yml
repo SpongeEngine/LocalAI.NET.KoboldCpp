@@ -1,4 +1,4 @@
-name: Tests
+name: Run Tests
 
 on:
   push:
@@ -27,5 +27,5 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
       
-    - name: Test (Unit Only)
-      run: dotnet test --no-build --verbosity normal --filter "Category!=Integration"
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
