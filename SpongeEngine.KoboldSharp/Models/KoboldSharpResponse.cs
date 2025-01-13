@@ -1,16 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace SpongeEngine.KoboldSharp.Models
 {
     public class KoboldSharpResponse
     {
-        [JsonProperty("results")]
+        [JsonPropertyName("results")]
         public List<KoboldSharpResult> Results { get; set; } = new();
     }
 
     public class KoboldSharpResult
     {
-        [JsonProperty("text")]
+        [JsonPropertyName("text")]
         public string Text { get; set; } = string.Empty;
     }
 }

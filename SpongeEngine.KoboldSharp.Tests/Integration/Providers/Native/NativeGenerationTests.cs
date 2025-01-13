@@ -18,7 +18,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
             Skip.If(!ServerAvailable, "KoboldCpp server is not available");
 
             // Arrange
-            var request = new KoboldSharpRequest
+            KoboldSharpRequest request = new KoboldSharpRequest
             {
                 Prompt = "Once upon a time",
                 MaxLength = 20,
@@ -30,7 +30,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
             };
 
             // Act
-            var response = await Provider.GenerateAsync(request);
+            KoboldSharpResponse response = await Provider.GenerateAsync(request);
 
             // Assert
             response.Should().NotBeNull();
@@ -44,7 +44,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
         {
             Skip.If(!ServerAvailable, "KoboldCpp server is not available");
 
-            var request = new KoboldSharpRequest
+            KoboldSharpRequest request = new KoboldSharpRequest
             {
                 Prompt = "Write a short story about",
                 MaxLength = 20,
@@ -56,12 +56,12 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
                 TrimStop = true
             };
 
-            var tokens = new List<string>();
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            List<string> tokens = new List<string>();
+            using CancellationTokenSource? cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
             try
             {
-                await foreach (var token in Provider.GenerateStreamAsync(request, cts.Token))
+                await foreach (String token in Provider.GenerateStreamAsync(request, cts.Token))
                 {
                     tokens.Add(token);
                     Output.WriteLine($"Received token: {token}");
@@ -94,7 +94,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
             Skip.If(!ServerAvailable, "KoboldCpp server is not available");
 
             // Arrange
-            var request = new KoboldSharpRequest
+            KoboldSharpRequest request = new KoboldSharpRequest
             {
                 Prompt = "Write a short story",
                 MaxLength = 20,
@@ -104,7 +104,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
             };
 
             // Act
-            var response = await Provider.GenerateAsync(request);
+            KoboldSharpResponse response = await Provider.GenerateAsync(request);
 
             // Assert
             response.Should().NotBeNull();
@@ -119,11 +119,11 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
             Skip.If(!ServerAvailable, "KoboldCpp server is not available");
 
             // Test various temperature settings
-            var temperatures = new[] { 0.1f, 0.7f, 1.5f };
-            foreach (var temp in temperatures)
+            float[] temperatures = new[] { 0.1f, 0.7f, 1.5f };
+            foreach (float temp in temperatures)
             {
                 // Arrange
-                var request = new KoboldSharpRequest
+                KoboldSharpRequest request = new KoboldSharpRequest
                 {
                     Prompt = "The quick brown fox",
                     MaxLength = 20,
@@ -135,7 +135,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.Native
                 };
 
                 // Act
-                 var response = await Provider.GenerateAsync(request);
+                KoboldSharpResponse response = await Provider.GenerateAsync(request);
 
                 // Assert
                 response.Should().NotBeNull();

@@ -1,70 +1,70 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace SpongeEngine.KoboldSharp.Models
 {
     public class KoboldSharpRequest
     {
-        [JsonProperty("prompt")]
+        [JsonPropertyName("prompt")]
         public string Prompt { get; set; } = string.Empty;
 
-        [JsonProperty("max_length")]
+        [JsonPropertyName("max_length")]
         public int MaxLength { get; set; } = 80;
 
-        [JsonProperty("max_context_length")]
+        [JsonPropertyName("max_context_length")]
         public int? MaxContextLength { get; set; }
 
-        [JsonProperty("temperature")]
+        [JsonPropertyName("temperature")]
         public float Temperature { get; set; } = 0.7f;
 
-        [JsonProperty("top_p")]
+        [JsonPropertyName("top_p")]
         public float TopP { get; set; } = 0.9f;
 
-        [JsonProperty("top_k")]
+        [JsonPropertyName("top_k")]
         public int TopK { get; set; } = 40;
 
-        [JsonProperty("top_a")]
+        [JsonPropertyName("top_a")]
         public float TopA { get; set; } = 0.0f;
 
-        [JsonProperty("typical")]
+        [JsonPropertyName("typical")]
         public float Typical { get; set; } = 1.0f;
 
-        [JsonProperty("tfs")]
+        [JsonPropertyName("tfs")]
         public float Tfs { get; set; } = 1.0f;
 
-        [JsonProperty("rep_pen")]
+        [JsonPropertyName("rep_pen")]
         public float RepetitionPenalty { get; set; } = 1.1f;
 
-        [JsonProperty("rep_pen_range")]
+        [JsonPropertyName("rep_pen_range")]
         public int RepetitionPenaltyRange { get; set; } = 64;
 
-        [JsonProperty("mirostat")]
+        [JsonPropertyName("mirostat")]
         public int MirostatMode { get; set; } = 0;
 
-        [JsonProperty("mirostat_tau")]
+        [JsonPropertyName("mirostat_tau")]
         public float MirostatTau { get; set; } = 5.0f;
 
-        [JsonProperty("mirostat_eta")]
+        [JsonPropertyName("mirostat_eta")]
         public float MirostatEta { get; set; } = 0.1f;
 
-        [JsonProperty("stop_sequence")]
+        [JsonPropertyName("stop_sequence")]
         public List<string>? StopSequences { get; set; }
 
-        [JsonProperty("stream")]
+        [JsonPropertyName("stream")]
         public bool Stream { get; set; }
 
-        [JsonProperty("trim_stop")]
+        [JsonPropertyName("trim_stop")]
         public bool TrimStop { get; set; } = true;
 
-        [JsonProperty("grammar")]
+        [JsonPropertyName("grammar")]
         public string? Grammar { get; set; }
 
-        [JsonProperty("memory")]
+        [JsonPropertyName("memory")]
         public string? Memory { get; set; }
 
-        [JsonProperty("banned_tokens")]
+        [JsonPropertyName("banned_tokens")]
         public List<string>? BannedTokens { get; set; }
 
-        [JsonProperty("logit_bias")]
+        [JsonPropertyName("logit_bias")]
         public Dictionary<string, float>? LogitBias { get; set; }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using SpongeEngine.KoboldSharp.Models;
 using SpongeEngine.LLMSharp.Core.Base;
 using SpongeEngine.LLMSharp.Core.Configuration;
 using SpongeEngine.LLMSharp.Core.Models;
-using JsonException = Newtonsoft.Json.JsonException;
 
 namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
 {
@@ -19,8 +19,8 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
 
         public KoboldSharpOpenAiProvider(
             HttpClient httpClient, 
-            LlmOptions options, string name, string baseUrl, string modelName = "koboldcpp",
-            ILogger? logger = null): base(httpClient, options, logger)
+            LlmOptions llmOptions, string name, string baseUrl, string modelName = "koboldcpp",
+            ILogger? logger = null): base(httpClient, llmOptions, logger)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             Name = name;
@@ -46,7 +46,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
             };
 
             var content = new StringContent(
-                JsonConvert.SerializeObject(request),
+                JsonSerializer.Serialize(request),
                 Encoding.UTF8,
                 "application/json");
 
@@ -62,7 +62,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
                     responseContent);
             }
 
-            var result = JsonConvert.DeserializeObject<OpenAiResponse>(responseContent);
+            var result = JsonSerializer.Deserialize<OpenAiResponse>(responseContent);
             return result?.Choices.FirstOrDefault()?.Text ?? string.Empty;
         }
 
@@ -82,7 +82,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
                 stream = true
             };
 
-            var requestJson = JsonConvert.SerializeObject(request);
+            var requestJson = JsonSerializer.Serialize(request);
             _logger?.LogDebug("OpenAI streaming request: {Payload}", requestJson);
 
             var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
@@ -118,7 +118,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
 
                 try 
                 {
-                    completion = JsonConvert.DeserializeObject<StreamCompletion>(data);
+                    completion = JsonSerializer.Deserialize<StreamCompletion>(data);
                     text = completion?.Choices?.FirstOrDefault()?.Text;
                 }
                 catch (JsonException ex)
@@ -135,12 +135,12 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
         
         private class StreamCompletion
         {
-            [JsonProperty("choices")]
+            [JsonPropertyName("choices")]
             public List<Choice> Choices { get; set; }
 
             public class Choice
             {
-                [JsonProperty("text")] 
+                [JsonPropertyName("text")] 
                 public string Text { get; set; }
             }
         }
@@ -168,24 +168,24 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI
 
         private class OpenAiResponse
         {
-            [JsonProperty("choices")]
+            [JsonPropertyName("choices")]
             public List<Choice> Choices { get; set; } = new();
 
             public class Choice
             {
-                [JsonProperty("text")]
+                [JsonPropertyName("text")]
                 public string Text { get; set; } = string.Empty;
             }
         }
 
         private class OpenAiStreamResponse
         {
-            [JsonProperty("choices")]
+            [JsonPropertyName("choices")]
             public List<Choice> Choices { get; set; } = new();
 
             public class Choice
             {
-                [JsonProperty("text")]
+                [JsonPropertyName("text")]
                 public string Text { get; set; } = string.Empty;
             }
         }

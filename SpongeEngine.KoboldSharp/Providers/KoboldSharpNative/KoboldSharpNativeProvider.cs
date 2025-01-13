@@ -1,51 +1,57 @@
 ﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using SpongeEngine.KoboldSharp.Models;
 using SpongeEngine.LLMSharp.Core.Base;
 using SpongeEngine.LLMSharp.Core.Configuration;
-using JsonException = Newtonsoft.Json.JsonException;
+using JsonException = System.Text.Json.JsonException;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
 {
     public class KoboldSharpNativeProvider : BaseLlmProvider
     {
-        public KoboldSharpNativeProvider(HttpClient httpClient, LlmOptions options, string name, string baseUrl, ILogger? logger = null) : base(httpClient, options, logger)
+        public KoboldSharpNativeProvider(HttpClient httpClient, LlmOptions llmOptions, string name, string baseUrl, ILogger? logger = null) : base(httpClient, llmOptions, logger)
         {
             Name = name;
             BaseUrl = baseUrl;
         }
 
-        public async Task<KoboldSharpResponse> GenerateAsync(KoboldSharpRequest request, CancellationToken cancellationToken = default, JsonSerializerSettings? jsonSerializerSettings = null)
+        public async Task<KoboldSharpResponse> GenerateAsync(KoboldSharpRequest request, CancellationToken cancellationToken = default, JsonSerializerOptions? customJsonSerializerOptions = null)
         {
             //KoboldCppUtils.ValidateRequest(request);
+            
+            JsonSerializerOptions jsonSerializerOptions = customJsonSerializerOptions ?? LlmOptions.JsonSerializerOptions;
 
             try
             {
-                var requestJson = JsonConvert.SerializeObject(request, jsonSerializerSettings);
-                _logger?.LogDebug("Generation request: {Request}", requestJson);
-
-                var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync("api/v1/generate", content, cancellationToken);
-                var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+                using HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/v1/generate");
+                httpRequest.Content = JsonContent.Create(request, options: jsonSerializerOptions);
+                using HttpResponseMessage? httpResponse = await _httpClient.SendAsync(
+                    httpRequest,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken);
+                string responseContent = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
                 
-                _logger?.LogDebug("Generation response status: {Status}", response.StatusCode);
+                _logger?.LogDebug("Generation response status: {Status}", httpResponse.StatusCode);
                 _logger?.LogDebug("Generation raw response: {Response}", responseContent);
 
-                if (!response.IsSuccessStatusCode)
+                if (!httpResponse.IsSuccessStatusCode)
                 {
-                    _logger?.LogError("Non-success status code: {Status}", response.StatusCode);
+                    _logger?.LogError("Non-success status code: {Status}", httpResponse.StatusCode);
                     throw new KoboldSharpException(
                         "Generation request failed",
                         "KoboldCpp",
-                        (int)response.StatusCode,
+                        (int)httpResponse.StatusCode,
                         responseContent);
                 }
 
                 try {
-                    var result = JsonConvert.DeserializeObject<KoboldSharpResponse>(responseContent);
+                    KoboldSharpResponse? result = JsonSerializer.Deserialize<KoboldSharpResponse>(responseContent, jsonSerializerOptions);
                     if (result == null)
                     {
                         _logger?.LogError("Deserialized response is null");
@@ -85,34 +91,39 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
             }
         }
 
-        public async IAsyncEnumerable<string> GenerateStreamAsync(KoboldSharpRequest request, [EnumeratorCancellation] CancellationToken cancellationToken = default, JsonSerializerSettings? jsonSerializerSettings = null)
+        public async IAsyncEnumerable<string> GenerateStreamAsync(KoboldSharpRequest request, [EnumeratorCancellation] CancellationToken cancellationToken = default, JsonSerializerOptions? customJsonSerializerOptions = null)
         {
             request.Stream = true;
-            var content = new StringContent(
-                JsonConvert.SerializeObject(request, jsonSerializerSettings),
-                Encoding.UTF8,
-                "application/json");
+            
+            JsonSerializerOptions jsonSerializerOptions = customJsonSerializerOptions ?? LlmOptions.JsonSerializerOptions;
 
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/extra/generate/stream")
-            {
-                Content = content
-            };
-
+            using HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/extra/generate/stream");
+            httpRequest.Content = JsonContent.Create(request, options: jsonSerializerOptions);
             httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
 
-            using var httpResponse = await _httpClient.SendAsync(
+            using HttpResponseMessage? httpResponse = await _httpClient.SendAsync(
                 httpRequest,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken);
-
+            string responseContent = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
             httpResponse.EnsureSuccessStatusCode();
+            
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                _logger?.LogError("Non-success status code: {Status}", httpResponse.StatusCode);
+                throw new KoboldSharpException(
+                    "Generation request failed",
+                    "KoboldCpp",
+                    (int)httpResponse.StatusCode,
+                    responseContent);
+            }
 
-            using var stream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken);
-            using var reader = new StreamReader(stream, Encoding.UTF8);
+            using Stream? stream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken);
+            using StreamReader? reader = new StreamReader(stream, Encoding.UTF8);
 
             while (!reader.EndOfStream && !cancellationToken.IsCancellationRequested)
             {
-                var line = await reader.ReadLineAsync();
+                string? line = await reader.ReadLineAsync();
                 if (string.IsNullOrEmpty(line))
                 {
                     await Task.Delay(50, cancellationToken);
@@ -129,7 +140,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
                 string? token = null;
                 try
                 {
-                    var streamResponse = JsonConvert.DeserializeObject<StreamResponse>(data);
+                    var streamResponse = JsonSerializer.Deserialize<StreamResponse>(data);
                     token = streamResponse?.Token;
                 }
                 catch (JsonException ex)
@@ -150,8 +161,8 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
         {
             try
             {
-                var response = await _httpClient.GetAsync("api/v1/model", cancellationToken);
-                var content = await response.Content.ReadAsStringAsync(cancellationToken);
+                HttpResponseMessage? response = await _httpClient.GetAsync("api/v1/model", cancellationToken);
+                string? content = await response.Content.ReadAsStringAsync(cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -162,8 +173,7 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
                         content);
                 }
 
-                return JsonConvert.DeserializeObject<KoboldSharpModelInfo>(content)
-                    ?? throw new KoboldSharpException("Failed to deserialize model info");
+                return JsonSerializer.Deserialize<KoboldSharpModelInfo>(content) ?? throw new KoboldSharpException("Failed to deserialize model info");
             }
             catch (Exception ex) when (ex is not KoboldSharpException)
             {
@@ -194,10 +204,10 @@ namespace SpongeEngine.KoboldSharp.Providers.KoboldSharpNative
 
         private class StreamResponse
         {
-            [JsonProperty("token")]
+            [JsonPropertyName("token")]
             public string Token { get; set; } = string.Empty;
 
-            [JsonProperty("finish_reason")] 
+            [JsonPropertyName("finish_reason")] 
             public string? FinishReason { get; set; }
         }
 

@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using SpongeEngine.KoboldSharp.Models;
 using SpongeEngine.KoboldSharp.Providers.KoboldSharpNative;
 using SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI;
@@ -20,7 +20,7 @@ namespace SpongeEngine.KoboldSharp.Client
         public string? Version { get; private set; }
         public bool SupportsStreaming => true;
 
-        public KoboldSharpClient(KoboldSharpOptions options, ILogger? logger = null, JsonSerializerSettings? jsonSettings = null)
+        public KoboldSharpClient(KoboldSharpOptions options, ILogger? logger = null, JsonSerializerOptions? jsonSerializerOptions = null)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
 

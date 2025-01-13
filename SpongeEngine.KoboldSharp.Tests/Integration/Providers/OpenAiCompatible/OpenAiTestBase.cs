@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using SpongeEngine.KoboldSharp.Providers.KoboldSharpOpenAI;
 using SpongeEngine.KoboldSharp.Tests.Common;
 using SpongeEngine.LLMSharp.Core.Configuration;
@@ -26,11 +25,6 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Providers.OpenAiCompatible
             { 
                 BaseAddress = new Uri(TestConfig.OpenAiApiBaseUrl),
                 Timeout = TimeSpan.FromSeconds(TestConfig.TimeoutSeconds)
-            };
-
-            var jsonSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
             };
 
             Provider = new KoboldSharpOpenAiProvider(
