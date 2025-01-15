@@ -41,12 +41,14 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" Condition="'$(TargetFramework)' == 'net8.0'" />
         <PackageReference Include="OllamaSharp" Version="4.0.11" />
         <PackageReference Include="Polly" Version="8.5.0" />
-        <PackageReference Include="SpongeEngine.LLMSharp.Core" Version="1.1.0" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     </ItemGroup>
 
     <!-- Include README in the package -->
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\LLMSharp.Core\SpongeEngine.LLMSharp.Core\SpongeEngine.LLMSharp.Core.csproj" />
     </ItemGroup>
 </Project>

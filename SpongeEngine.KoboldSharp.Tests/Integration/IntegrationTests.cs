@@ -18,7 +18,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
             Skip.If(!ServerAvailable, "KoboldCpp server is not available");
 
             // Arrange
-            KoboldSharpRequest request = new KoboldSharpRequest
+            KoboldSharpClient.KoboldSharpRequest request = new KoboldSharpClient.KoboldSharpRequest
             {
                 Prompt = "Once upon a time",
                 MaxLength = 20,
@@ -30,7 +30,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
             };
 
             // Act
-            KoboldSharpResponse response = await Client.GenerateAsync(request);
+            KoboldSharpClient.GenerateAsyncResponse response = await Client.GenerateAsync(request);
 
             // Assert
             response.Should().NotBeNull();
@@ -44,7 +44,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
         {
             Skip.If(!ServerAvailable, "KoboldCpp server is not available");
 
-            KoboldSharpRequest request = new KoboldSharpRequest
+            KoboldSharpClient.KoboldSharpRequest request = new KoboldSharpClient.KoboldSharpRequest
             {
                 Prompt = "Write a short story about",
                 MaxLength = 20,
@@ -94,7 +94,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
             Skip.If(!ServerAvailable, "KoboldCpp server is not available");
 
             // Arrange
-            KoboldSharpRequest request = new KoboldSharpRequest
+            KoboldSharpClient.KoboldSharpRequest request = new KoboldSharpClient.KoboldSharpRequest
             {
                 Prompt = "Write a short story",
                 MaxLength = 20,
@@ -104,7 +104,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
             };
 
             // Act
-            KoboldSharpResponse response = await Client.GenerateAsync(request);
+            KoboldSharpClient.GenerateAsyncResponse response = await Client.GenerateAsync(request);
 
             // Assert
             response.Should().NotBeNull();
@@ -123,7 +123,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
             foreach (float temp in temperatures)
             {
                 // Arrange
-                KoboldSharpRequest request = new KoboldSharpRequest
+                KoboldSharpClient.KoboldSharpRequest request = new KoboldSharpClient.KoboldSharpRequest
                 {
                     Prompt = "The quick brown fox",
                     MaxLength = 20,
@@ -135,7 +135,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
                 };
 
                 // Act
-                KoboldSharpResponse response = await Client.GenerateAsync(request);
+                KoboldSharpClient.GenerateAsyncResponse response = await Client.GenerateAsync(request);
 
                 // Assert
                 response.Should().NotBeNull();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using SpongeEngine.KoboldSharp.Models;
 using SpongeEngine.KoboldSharp.Tests.Common;
-using SpongeEngine.LLMSharp.Core.Configuration;
+using SpongeEngine.LLMSharp.Core;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -25,8 +26,14 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
                 BaseAddress = new Uri(TestConfig.NativeApiBaseUrl),
                 Timeout = TimeSpan.FromSeconds(TestConfig.TimeoutSeconds)
             };
-
-            Client = new KoboldSharpClient(httpClient, new LlmClientOptions(), "", TestConfig.BaseUrl, Logger);
+            
+            Client = new KoboldSharpClient(
+                new KoboldSharpClientOptions() 
+                {
+                    HttpClient = httpClient,
+                    BaseUrl = TestConfig.BaseUrl,
+                    Logger = Logger,
+                });
         }
 
         public async Task InitializeAsync()

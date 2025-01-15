@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using SpongeEngine.KoboldSharp.Models;
 using SpongeEngine.KoboldSharp.Tests.Common;
-using SpongeEngine.LLMSharp.Core.Configuration;
+using SpongeEngine.LLMSharp.Core;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using Xunit;
@@ -17,7 +17,13 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit
         public UnitTests(ITestOutputHelper output) : base(output)
         {
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
-            _client = new KoboldSharpClient(_httpClient, new LlmClientOptions(), "KoboldCpp", TestConfig.BaseUrl, Logger);
+            _client = new KoboldSharpClient(
+                new KoboldSharpClientOptions() 
+                {
+                    HttpClient = _httpClient,
+                    BaseUrl = TestConfig.BaseUrl,
+                    Logger = Logger,
+                });
         }
         
                 [Fact]
@@ -33,7 +39,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit
                     .WithStatusCode(200)
                     .WithBody($"{{\"results\": [{{\"text\": \"{expectedResponse}\", \"tokens\": 3}}]}}"));
 
-            var request = new KoboldSharpRequest
+            KoboldSharpClient.KoboldSharpRequest request = new KoboldSharpClient.KoboldSharpRequest
             {
                 Prompt = "Test prompt",
                 MaxLength = 80
@@ -63,7 +69,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit
                               "data: {\"token\": \"!\", \"complete\": true}\n\n")
                     .WithHeader("Content-Type", "text/event-stream"));
 
-            var request = new KoboldSharpRequest
+            KoboldSharpClient.KoboldSharpRequest request = new KoboldSharpClient.KoboldSharpRequest
             {
                 Prompt = "Test prompt",
                 MaxLength = 80,
@@ -131,7 +137,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit
                     .WithStatusCode(200)
                     .WithBody($"{{\"results\": [{{\"text\": \"{expectedResponse}\", \"tokens\": 3}}]}}"));
 
-            var request = new KoboldSharpRequest
+            KoboldSharpClient.KoboldSharpRequest request = new KoboldSharpClient.KoboldSharpRequest
             {
                 Prompt = "Test prompt",
                 MaxLength = 80
@@ -161,7 +167,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit
                               "data: {\"token\": \"!\", \"complete\": true}\n\n")
                     .WithHeader("Content-Type", "text/event-stream"));
 
-            var request = new KoboldSharpRequest
+            KoboldSharpClient.KoboldSharpRequest request = new KoboldSharpClient.KoboldSharpRequest
             {
                 Prompt = "Test prompt",
                 MaxLength = 80,
