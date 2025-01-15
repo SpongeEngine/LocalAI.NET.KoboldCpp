@@ -31,8 +31,6 @@
 
     <ItemGroup>
       <Folder Include="Integration\Multiplayer\" />
-      <Folder Include="Integration\StableDiffusion\" />
       <Folder Include="Unit\Multiplayer\" />
-      <Folder Include="Unit\StableDiffusion\" />
     </ItemGroup>
 </Project>
