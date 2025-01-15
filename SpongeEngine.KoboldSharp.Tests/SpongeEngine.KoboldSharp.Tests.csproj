@@ -28,4 +28,11 @@
         <PackageReference Include="Xunit.SkippableFact" Version="1.5.23" />
         <ProjectReference Include="..\SpongeEngine.KoboldSharp\SpongeEngine.KoboldSharp.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Integration\Multiplayer\" />
+      <Folder Include="Integration\StableDiffusion\" />
+      <Folder Include="Unit\Multiplayer\" />
+      <Folder Include="Unit\StableDiffusion\" />
+    </ItemGroup>
 </Project>

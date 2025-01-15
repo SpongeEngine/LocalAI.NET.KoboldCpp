@@ -2,13 +2,13 @@
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SpongeEngine.KoboldSharp.Tests.Integration
+namespace SpongeEngine.KoboldSharp.Tests.Integration.Extra
 {
     [Trait("Category", "Integration")]
     [Trait("API", "Native")]
-    public class ExtraIntegrationTests : IntegrationTestBase
+    public class GenerateStream : IntegrationTestBase
     {
-        public ExtraIntegrationTests(ITestOutputHelper output) : base(output) {}
+        public GenerateStream(ITestOutputHelper output) : base(output) {}
         
         [SkippableFact]
         [Trait("Category", "Integration")]

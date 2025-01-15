@@ -4,11 +4,11 @@ using WireMock.ResponseBuilders;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SpongeEngine.KoboldSharp.Tests.Unit
+namespace SpongeEngine.KoboldSharp.Tests.Unit.Extra
 {
-    public class ExtraUnitTests : UnitTestBase
+    public class GenerateStreamAsync : UnitTestBase
     {
-        public ExtraUnitTests(ITestOutputHelper output) : base(output) {}
+        public GenerateStreamAsync(ITestOutputHelper output) : base(output) {}
         
         [Fact]
         public async Task GenerateStreamAsync_ShouldStreamTokens()
