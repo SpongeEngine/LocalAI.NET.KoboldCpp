@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 
 namespace SpongeEngine.KoboldSharp.Tests.Unit
 {
-    public abstract class UnitTestBase : IDisposable
+    public abstract class UnitTestBase : TestBase
     {
         protected readonly WireMockServer Server;
         protected readonly ILogger Logger;

@@ -56,23 +56,6 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Extra
         }
 
         [SkippableFact]
-        public async Task GetPendingOutput_WithNoGeneration_ShouldReturnEmpty()
-        {
-            Skip.If(!ServerAvailable, "KoboldCpp server is not available");
-
-            // First ensure no generation is running
-            await Client.AbortGenerateAsync();
-            await Task.Delay(500); // Give time for any pending operations to complete
-
-            // Act
-            var result = await Client.GetPendingOutputAsync();
-
-            // Assert
-            result.Should().BeEmpty();
-            Output.WriteLine("Successfully verified no pending output when no generation is active");
-        }
-
-        [SkippableFact]
         public async Task GetPendingOutput_MultipleChecks_ShouldShowProgress()
         {
             Skip.If(!ServerAvailable, "KoboldCpp server is not available");

@@ -60,15 +60,20 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Extra
         {
             Skip.If(!ServerAvailable, "KoboldCpp server is not available");
 
-            // First ensure no generation is running
+            // First ensure no generation is running by waiting for abort
             await Client.AbortGenerateAsync();
-            await Task.Delay(500); // Give time for any pending operations to complete
+            
+            // Wait a bit longer to ensure any pending operations are fully complete
+            await Task.Delay(2000);
 
-            // Act
-            var result = await Client.GetPendingOutputAsync();
+            // Verify no active generations multiple times to ensure stability
+            for (int i = 0; i < 3; i++)
+            {
+                var result = await Client.GetPendingOutputAsync();
+                result.Should().BeEmpty($"No output should be pending (attempt {i + 1})");
+                await Task.Delay(500);
+            }
 
-            // Assert
-            result.Should().BeEmpty();
             Output.WriteLine("Successfully verified no pending output when no generation is active");
         }
 

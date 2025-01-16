@@ -8,9 +8,6 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.StableDiffusion
     [Trait("API", "Native")]
     public class ImageToImage : IntegrationTestBase
     {
-        // Simple 1x1 pixel base64 encoded PNG
-        private const string SampleBase64Image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
-        
         public ImageToImage(ITestOutputHelper output) : base(output) { }
 
         [SkippableFact]
