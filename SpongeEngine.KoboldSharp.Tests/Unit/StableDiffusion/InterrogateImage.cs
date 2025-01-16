@@ -123,7 +123,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
                     .UsingPost())
                 .RespondWith(Response.Create()
                     .WithStatusCode(200)
-                    .WithBody("{}"));
+                    .WithBody("{}"));  // Empty response without caption field
 
             // Act & Assert
             await Client.Invoking(c => c.InterrogateImageAsync(request))

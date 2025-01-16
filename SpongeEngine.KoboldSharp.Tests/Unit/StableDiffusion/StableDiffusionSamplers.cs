@@ -101,13 +101,8 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
                     .UsingGet())
                 .RespondWith(Response.Create()
                     .WithStatusCode(200)
-                    .WithBody(@"[
-                        {
-                            ""name"": ""Invalid Sampler"",
-                            ""aliases"": null,
-                            ""options"": null
-                        }
-                    ]"));
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBody(@"[{""name"": ""Invalid Sampler"",""aliases"": [],""options"": {}}]"));
 
             // Act
             var samplers = await Client.GetStableDiffusionSamplersAsync();
@@ -117,6 +112,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
             samplers.Should().ContainSingle();
             var sampler = samplers[0];
             sampler.Name.Should().Be("Invalid Sampler");
+            sampler.Aliases.Should().NotBeNull();
             sampler.Aliases.Should().BeEmpty();
             sampler.Options.Should().BeEmpty();
         }

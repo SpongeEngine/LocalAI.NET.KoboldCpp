@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using SpongeEngine.LLMSharp.Core.Exceptions;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -56,34 +57,41 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
         [Fact]
         public async Task ImageToImage_WithDifferentDenoisingStrength_ShouldWork()
         {
-            // Arrange
-            var request = new KoboldSharpClient.StableDiffusionImageToImageRequest
+            var strengths = new[] { 0.3f, 0.7f, 0.9f };
+    
+            foreach (var strength in strengths)
             {
-                InitImages = new List<string> { SampleBase64Image },
-                Prompt = "Convert to oil painting",
-                DenoisingStrength = 0.9f,
-                Steps = 20
-            };
+                // Arrange
+                var request = new KoboldSharpClient.StableDiffusionImageToImageRequest
+                {
+                    InitImages = new List<string> { SampleBase64Image },
+                    Prompt = "Convert to sketch",
+                    DenoisingStrength = strength,
+                    Steps = 20
+                };
 
-            Server
-                .Given(Request.Create()
-                    .WithPath("/sdapi/v1/img2img")
-                    .WithBody(body => body.Contains("\"denoising_strength\":0.9"))
-                    .UsingPost())
-                .RespondWith(Response.Create()
-                    .WithStatusCode(200)
-                    .WithBody($@"{{
-                        ""images"": [""{SampleBase64Image}""],
-                        ""parameters"": {{}},
-                        ""info"": """"
-                    }}"));
+                // Mock successful response
+                Server
+                    .Given(Request.Create()
+                        .WithPath("/sdapi/v1/img2img")
+                        .WithBody(body => body.Contains($"\"denoising_strength\":{strength}"))
+                        .UsingPost())
+                    .RespondWith(Response.Create()
+                        .WithStatusCode(200)
+                        .WithBody(@"{
+                    ""images"": [""base64_image_data""],
+                    ""parameters"": {},
+                    ""info"": """"
+                }"));
 
-            // Act
-            var result = await Client.ImageToImageAsync(request);
+                // Act
+                var result = await Client.ImageToImageAsync(request);
 
-            // Assert
-            result.Should().NotBeNull();
-            result.Images.Should().NotBeEmpty();
+                // Assert
+                result.Should().NotBeNull();
+                result.Images.Should().NotBeEmpty();
+                Logger.LogInformation($"Successfully generated image with denoising strength {strength}");
+            }
         }
 
         [Fact]

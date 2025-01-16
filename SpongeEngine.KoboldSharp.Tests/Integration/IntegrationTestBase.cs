@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace SpongeEngine.KoboldSharp.Tests.Integration
 {
-    public abstract class IntegrationTestBase : TestBase
+    public abstract class IntegrationTestBase : TestBase, IAsyncLifetime
     {
         protected readonly KoboldSharpClient Client;
         protected readonly ITestOutputHelper Output;
