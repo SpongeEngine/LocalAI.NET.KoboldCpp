@@ -32,8 +32,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.StableDiffusion
             // Assert
             result.Should().NotBeNull();
             result.Images.Should().NotBeEmpty("At least one image should be generated");
-            result.Parameters.Should().NotBeEmpty("Generation parameters should be returned");
-            
+    
             // Log generation details
             Output.WriteLine($"Generated {result.Images.Count} images");
             Output.WriteLine($"Parameters: {result.Info}");

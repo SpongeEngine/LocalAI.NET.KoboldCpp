@@ -57,32 +57,36 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
         [Fact]
         public async Task ImageToImage_WithDifferentDenoisingStrength_ShouldWork()
         {
+            var mockBase64Image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
             var strengths = new[] { 0.3f, 0.7f, 0.9f };
     
+            // Setup a single response for all denoising strengths
+            Server
+                .Given(Request.Create()
+                    .WithPath("/sdapi/v1/img2img")
+                    .UsingPost())
+                .RespondWith(Response.Create()
+                    .WithStatusCode(200)
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBody($@"{{
+                ""images"": [""{mockBase64Image}""],
+                ""parameters"": {{}},
+                ""info"": """"
+            }}"));
+
             foreach (var strength in strengths)
             {
-                // Arrange
+                // Setup the request
                 var request = new KoboldSharpClient.StableDiffusionImageToImageRequest
                 {
-                    InitImages = new List<string> { SampleBase64Image },
+                    InitImages = new List<string> { mockBase64Image },
                     Prompt = "Convert to sketch",
                     DenoisingStrength = strength,
                     Steps = 20
                 };
 
-                // Mock successful response
-                Server
-                    .Given(Request.Create()
-                        .WithPath("/sdapi/v1/img2img")
-                        .WithBody(body => body.Contains($"\"denoising_strength\":{strength}"))
-                        .UsingPost())
-                    .RespondWith(Response.Create()
-                        .WithStatusCode(200)
-                        .WithBody(@"{
-                    ""images"": [""base64_image_data""],
-                    ""parameters"": {},
-                    ""info"": """"
-                }"));
+                // Log what we're doing
+                Logger.LogInformation($"Testing denoising strength: {strength}");
 
                 // Act
                 var result = await Client.ImageToImageAsync(request);
@@ -90,6 +94,9 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
                 // Assert
                 result.Should().NotBeNull();
                 result.Images.Should().NotBeEmpty();
+                result.Images.Should().HaveCount(1);
+                result.Images[0].Should().Be(mockBase64Image);
+        
                 Logger.LogInformation($"Successfully generated image with denoising strength {strength}");
             }
         }

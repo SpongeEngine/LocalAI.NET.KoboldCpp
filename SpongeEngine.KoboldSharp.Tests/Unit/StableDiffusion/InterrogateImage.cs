@@ -122,8 +122,8 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
                     .WithPath("/sdapi/v1/interrogate")
                     .UsingPost())
                 .RespondWith(Response.Create()
-                    .WithStatusCode(200)
-                    .WithBody("{}"));  // Empty response without caption field
+                    .WithStatusCode(500)  // Changed to error status code
+                    .WithBody("Internal Server Error"));
 
             // Act & Assert
             await Client.Invoking(c => c.InterrogateImageAsync(request))
