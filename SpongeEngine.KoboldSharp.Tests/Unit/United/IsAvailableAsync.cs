@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
+using SpongeEngine.KoboldSharp.Tests.Unit;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SpongeEngine.KoboldSharp.Tests.Unit.United
+namespace SpongeEngine.KoboldSharp.Tests.Integration
 {
     public class IsAvailableAsync : UnitTestBase
     {
