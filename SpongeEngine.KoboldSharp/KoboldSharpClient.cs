@@ -1,5 +1,4 @@
-﻿using SpongeEngine.KoboldSharp.Models;
-using SpongeEngine.LLMSharp.Core;
+﻿using SpongeEngine.LLMSharp.Core;
 
 namespace SpongeEngine.KoboldSharp
 {

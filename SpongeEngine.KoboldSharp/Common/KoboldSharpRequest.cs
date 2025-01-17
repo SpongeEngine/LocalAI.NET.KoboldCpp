@@ -27,6 +27,9 @@ namespace SpongeEngine.KoboldSharp
             [JsonPropertyName("top_a")]
             public float TopA { get; set; } = 0.0f;
 
+            [JsonPropertyName("min_p")]
+            public float MinP { get; set; } = 0.0f;
+
             [JsonPropertyName("typical")]
             public float Typical { get; set; } = 1.0f;
 
@@ -37,7 +40,13 @@ namespace SpongeEngine.KoboldSharp
             public float RepetitionPenalty { get; set; } = 1.1f;
 
             [JsonPropertyName("rep_pen_range")]
-            public int RepetitionPenaltyRange { get; set; } = 64;
+            public int RepetitionPenaltyRange { get; set; } = 320;
+
+            [JsonPropertyName("rep_pen_slope")]
+            public float RepetitionPenaltySlope { get; set; } = 1.0f;
+
+            [JsonPropertyName("presence_penalty")]
+            public float PresencePenalty { get; set; } = 0.0f;
 
             [JsonPropertyName("mirostat")]
             public int MirostatMode { get; set; } = 0;
@@ -60,6 +69,9 @@ namespace SpongeEngine.KoboldSharp
             [JsonPropertyName("grammar")]
             public string? Grammar { get; set; }
 
+            [JsonPropertyName("grammar_retain_state")]
+            public bool GrammarRetainState { get; set; }
+
             [JsonPropertyName("memory")]
             public string? Memory { get; set; }
 
@@ -68,6 +80,36 @@ namespace SpongeEngine.KoboldSharp
 
             [JsonPropertyName("logit_bias")]
             public Dictionary<string, float>? LogitBias { get; set; }
+
+            [JsonPropertyName("images")]
+            public List<string>? Images { get; set; }
+
+            [JsonPropertyName("seed")]
+            public int Seed { get; set; } = -1;
+
+            [JsonPropertyName("quiet")]
+            public bool Quiet { get; set; }
+
+            [JsonPropertyName("allow_eos_token")]
+            public bool AllowEosToken { get; set; } = true;
+
+            [JsonPropertyName("bypass_eos_token")]
+            public bool BypassEosToken { get; set; }
+
+            [JsonPropertyName("render_special")]
+            public bool RenderSpecial { get; set; }
+
+            [JsonPropertyName("sampler_order")]
+            public int[]? SamplerOrder { get; set; }
+
+            [JsonPropertyName("dynatemp_range")]
+            public float DynamicTemperatureRange { get; set; } = 0.0f;
+
+            [JsonPropertyName("dynatemp_exponent")]
+            public float DynamicTemperatureExponent { get; set; } = 1.0f;
+
+            [JsonPropertyName("smoothing_factor")]
+            public float SmoothingFactor { get; set; } = 0.0f;
         }
     }
 }

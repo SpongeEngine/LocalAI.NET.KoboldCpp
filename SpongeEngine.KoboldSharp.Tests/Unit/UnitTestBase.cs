@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using SpongeEngine.KoboldSharp.Models;
 using SpongeEngine.KoboldSharp.Tests.Common;
 using WireMock.Server;
 using Xunit.Abstractions;

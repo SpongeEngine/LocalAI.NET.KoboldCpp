@@ -1,18 +1,27 @@
 ﻿using SpongeEngine.LLMSharp.Core;
 
-namespace SpongeEngine.KoboldSharp.Models
+namespace SpongeEngine.KoboldSharp
 {
-    public class KoboldSharpClientOptions: LlmClientBaseOptions
+    public class KoboldSharpClientOptions : LlmClientBaseOptions 
     {
-        #region LlmClientBaseOptions
         public override string BaseUrl { get; set; } = "http://localhost:5001";
-        #endregion
 
-        #region KoboldSharpClientOptions
-        /// <summary>
-        /// Whether to use GPU acceleration.
-        /// </summary>
-        public bool UseGpu { get; set; } = true;
-        #endregion
+        // Client-side settings
+        public bool MultiplayerEnabled { get; set; } = false;
+        public bool WebSearchEnabled { get; set; } = false;
+    
+        // Stable Diffusion settings
+        public string? StableDiffusionModelPath { get; set; }
+        public string? StableDiffusionVaePath { get; set; }
+        public bool StableDiffusionUseQuantization { get; set; } = false;
+        public int StableDiffusionMaxResolution { get; set; } = 512;
+        public int StableDiffusionThreads { get; set; } = -1;
+
+        // Chat completion settings
+        public string? ChatCompletionsAdapterPath { get; set; }
+
+        // Progress tracking
+        public bool ShowProgress { get; set; } = false;
+        public int ProgressUpdateInterval { get; set; } = 100;
     }
 }
