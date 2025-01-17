@@ -5,16 +5,18 @@
 [![License](https://img.shields.io/github/license/SpongeEngine/KoboldSharp)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-6.0%20%7C%207.0%20%7C%208.0%2B-512BD4)](https://dotnet.microsoft.com/download)
 
-C# client for interacting with KoboldCpp through its native and OpenAI-compatible endpoints.
+C# client for interacting with KoboldCpp through its native API.
 
 ## Features
 - Complete support for KoboldCpp's native API
-- OpenAI-compatible API endpoint support
 - Streaming text generation
-- Comprehensive configuration options
 - Built-in error handling and logging
 - Cross-platform compatibility
 - Full async/await support
+- Support for Stable Diffusion image generation
+- Support for Whisper audio transcription
+- Support for WebSearch integration
+- Support for multiplayer features
 
 📦 [View Package on NuGet](https://www.nuget.org/packages/SpongeEngine.KoboldSharp)
 
@@ -26,17 +28,17 @@ dotnet add package SpongeEngine.KoboldSharp
 
 ## Quick Start
 
-### Using Native API
+### Basic Usage
 ```csharp
-using SpongeEngine.KoboldSharp.Client;
-using SpongeEngine.KoboldSharp.Models;
+using SpongeEngine.KoboldSharp;
 
 // Configure the client
-var options = new KoboldSharpOptions
+var options = new KoboldSharpClientOptions
 {
     BaseUrl = "http://localhost:5001",
-    UseGpu = true,
-    ContextSize = 2048
+    // Optional client-side settings
+    MultiplayerEnabled = false,
+    WebSearchEnabled = false
 };
 
 // Create client instance
@@ -61,71 +63,84 @@ await foreach (var token in client.GenerateStreamAsync(request))
 }
 ```
 
-### Using OpenAI-Compatible API
+## Configuration
+
+### Client Options
 ```csharp
-var options = new KoboldSharpOptions
+var options = new KoboldSharpClientOptions
 {
-    BaseUrl = "http://localhost:5001",
-    UseOpenAiApi = true
-};
-
-using var client = new KoboldSharpClient(options);
-
-// Simple completion
-string response = await client.CompleteAsync(
-    "Write a short story about:",
-    new CompletionOptions
-    {
-        MaxTokens = 200,
-        Temperature = 0.7f,
-        TopP = 0.9f
-    });
-
-// Stream completion
-await foreach (var token in client.StreamCompletionAsync(
-    "Once upon a time...",
-    new CompletionOptions { MaxTokens = 200 }))
-{
-    Console.Write(token);
-}
-```
-
-## Configuration Options
-
-### Basic Options
-```csharp
-var options = new KoboldSharpOptions
-{
+    // Base configuration
     BaseUrl = "http://localhost:5001",    // KoboldCpp server URL
-    ApiKey = "optional_api_key",          // Optional API key
-    TimeoutSeconds = 600,                 // Request timeout
-    ContextSize = 2048,                   // Maximum context size
-    UseGpu = true,                        // Enable GPU acceleration
-    UseOpenAiApi = false                  // Use OpenAI-compatible API
+    ApiKey = "optional_api_key",          // Optional API key if server requires auth
+    
+    // Optional features
+    MultiplayerEnabled = false,           // Enable multiplayer support
+    WebSearchEnabled = false,             // Enable web search integration
+    
+    // Stable Diffusion settings (if using image generation)
+    StableDiffusionModelPath = "path/to/model.safetensors",
+    StableDiffusionVaePath = "path/to/vae.safetensors",
+    StableDiffusionUseQuantization = false,
+    StableDiffusionMaxResolution = 512,
+    StableDiffusionThreads = -1,
+
+    // HTTP and resilience settings
+    Timeout = TimeSpan.FromMinutes(10),
+    MaxRetryAttempts = 3,
+    RetryDelay = TimeSpan.FromSeconds(2)
 };
 ```
 
-### Advanced Generation Parameters
+### Generation Parameters
 ```csharp
 var request = new KoboldSharpRequest
 {
+    // Basic Parameters
     Prompt = "Your prompt here",
-    MaxLength = 200,                      // Maximum tokens to generate
-    MaxContextLength = 2048,              // Maximum context length
-    Temperature = 0.7f,                   // Randomness (0.0-1.0)
-    TopP = 0.9f,                         // Nucleus sampling threshold
-    TopK = 40,                           // Top-K sampling
-    TopA = 0.0f,                         // Top-A sampling
-    Typical = 1.0f,                      // Typical sampling
-    Tfs = 1.0f,                          // Tail-free sampling
-    RepetitionPenalty = 1.1f,            // Repetition penalty
-    RepetitionPenaltyRange = 64,         // Penalty range
-    StopSequences = new List<string> { "\n" },  // Stop sequences
-    Stream = false,                       // Enable streaming
-    TrimStop = true,                      // Trim stop sequences
-    MirostatMode = 0,                     // Mirostat sampling mode
-    MirostatTau = 5.0f,                   // Mirostat target entropy
-    MirostatEta = 0.1f                    // Mirostat learning rate
+    MaxLength = 200,                     // Maximum tokens to generate
+    MaxContextLength = 2048,             // Maximum context length
+    Temperature = 0.7f,                  // Randomness (0.0-1.0)
+    
+    // Sampling Parameters
+    TopP = 0.9f,                        // Nucleus sampling threshold
+    TopK = 40,                          // Top-K sampling
+    TopA = 0.0f,                        // Top-A sampling
+    MinP = 0.0f,                        // Minimum P sampling
+    Typical = 1.0f,                     // Typical sampling
+    Tfs = 1.0f,                         // Tail-free sampling
+    
+    // Repetition Control
+    RepetitionPenalty = 1.1f,           // Base repetition penalty
+    RepetitionPenaltyRange = 320,       // How far back to apply penalty
+    RepetitionPenaltySlope = 1.0f,      // Penalty application slope
+    PresencePenalty = 0.0f,             // Presence penalty
+    
+    // Mirostat Parameters
+    MirostatMode = 0,                   // Mirostat sampling mode (0, 1, 2)
+    MirostatTau = 5.0f,                 // Target entropy
+    MirostatEta = 0.1f,                 // Learning rate
+
+    // Advanced Control
+    Seed = -1,                          // RNG seed (-1 for random)
+    StopSequences = new List<string>(),  // Stop generation sequences
+    Stream = false,                      // Enable streaming
+    TrimStop = true,                    // Trim stop sequences
+    Grammar = null,                     // Optional grammar constraints
+    GrammarRetainState = false,         // Retain grammar state
+    Memory = null,                      // Optional context memory
+    BannedTokens = null,                // Tokens to never generate
+    LogitBias = null,                   // Token generation biases
+    
+    // Special Features
+    Images = null,                      // Images for multimodal models
+    AllowEosToken = true,               // Allow end of sequence token
+    BypassEosToken = false,             // Bypass EOS token
+    RenderSpecial = false,              // Render special tokens
+    
+    // Dynamic Temperature
+    DynamicTemperatureRange = 0.0f,     // Dynamic temperature range
+    DynamicTemperatureExponent = 1.0f,  // Dynamic temperature exponent
+    SmoothingFactor = 0.0f              // Output smoothing factor
 };
 ```
 
@@ -135,10 +150,9 @@ try
 {
     var response = await client.GenerateAsync(request);
 }
-catch (KoboldSharpException ex)
+catch (LlmSharpException ex)
 {
-    Console.WriteLine($"KoboldCpp error: {ex.Message}");
-    Console.WriteLine($"Provider: {ex.Provider}");
+    Console.WriteLine($"Generation error: {ex.Message}");
     if (ex.StatusCode.HasValue)
     {
         Console.WriteLine($"Status code: {ex.StatusCode}");
@@ -147,10 +161,6 @@ catch (KoboldSharpException ex)
     {
         Console.WriteLine($"Response content: {ex.ResponseContent}");
     }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"General error: {ex.Message}");
 }
 ```
 
@@ -167,32 +177,15 @@ ILogger logger = LoggerFactory
 var client = new KoboldSharpClient(options, logger);
 ```
 
-## JSON Serialization
-Custom JSON settings can be provided:
-
-```csharp
-var jsonSettings = new JsonSerializerSettings
-{
-    NullValueHandling = NullValueHandling.Ignore,
-    DefaultValueHandling = DefaultValueHandling.Ignore
-};
-
-var client = new KoboldSharpClient(options, jsonSettings: jsonSettings);
-```
-
 ## Testing
-The library includes both unit and integration tests. Integration tests require a running KoboldCpp server.
-
 To run the tests:
 ```bash
 dotnet test
 ```
 
-To configure the test environment:
+Configure test environment:
 ```csharp
-// Set environment variables for testing
 Environment.SetEnvironmentVariable("KOBOLDCPP_BASE_URL", "http://localhost:5001");
-Environment.SetEnvironmentVariable("KOBOLDCPP_OPENAI_BASE_URL", "http://localhost:5001/v1");
 ```
 
 ## License
