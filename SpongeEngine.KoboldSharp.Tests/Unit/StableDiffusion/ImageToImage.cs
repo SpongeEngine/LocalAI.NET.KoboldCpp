@@ -86,7 +86,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
                 };
 
                 // Log what we're doing
-                Logger.LogInformation($"Testing denoising strength: {strength}");
+                Client.Options.Logger.LogInformation($"Testing denoising strength: {strength}");
 
                 // Act
                 var result = await Client.ImageToImageAsync(request);
@@ -97,7 +97,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
                 result.Images.Should().HaveCount(1);
                 result.Images[0].Should().Be(mockBase64Image);
         
-                Logger.LogInformation($"Successfully generated image with denoising strength {strength}");
+                Client.Options.Logger.LogInformation($"Successfully generated image with denoising strength {strength}");
             }
         }
 

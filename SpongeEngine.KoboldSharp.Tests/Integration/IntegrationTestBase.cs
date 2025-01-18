@@ -19,17 +19,15 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
             Logger = LoggerFactory
                 .Create(builder => builder.AddXUnit(output))
                 .CreateLogger(GetType());
-
-            var httpClient = new HttpClient 
-            { 
-                BaseAddress = new Uri(TestConfig.NativeApiBaseUrl),
-                Timeout = TimeSpan.FromSeconds(TestConfig.TimeoutSeconds)
-            };
             
             Client = new KoboldSharpClient(
                 new KoboldSharpClientOptions() 
                 {
-                    HttpClient = httpClient,
+                    HttpClient = new HttpClient 
+                    { 
+                        BaseAddress = new Uri(TestConfig.NativeApiBaseUrl),
+                        Timeout = TimeSpan.FromSeconds(TestConfig.TimeoutSeconds)
+                    },
                     BaseUrl = TestConfig.BaseUrl,
                     Logger = Logger,
                 });

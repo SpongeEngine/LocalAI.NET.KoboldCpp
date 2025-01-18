@@ -8,32 +8,20 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit
     public abstract class UnitTestBase : TestBase
     {
         protected readonly WireMockServer Server;
-        protected readonly ILogger Logger;
-        protected readonly string BaseUrl;
         protected readonly KoboldSharpClient Client;
-        protected readonly HttpClient HttpClient;
 
         protected UnitTestBase(ITestOutputHelper output)
         {
             Server = WireMockServer.Start();
-            BaseUrl = Server.Urls[0];
-            Logger = LoggerFactory
-                .Create(builder => builder.AddXUnit(output))
-                .CreateLogger(GetType());
-            HttpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
             Client = new KoboldSharpClient(
                 new KoboldSharpClientOptions() 
                 {
-                    HttpClient = HttpClient,
+                    HttpClient = new HttpClient { BaseAddress = new Uri(Server.Urls[0]) },
                     BaseUrl = TestConfig.BaseUrl,
-                    Logger = Logger,
+                    Logger = LoggerFactory
+                        .Create(builder => builder.AddXUnit(output))
+                        .CreateLogger(GetType()),
                 });
-        }
-
-        public virtual void Dispose()
-        {
-            HttpClient.Dispose();
-            Server.Dispose();
         }
     }
 }
