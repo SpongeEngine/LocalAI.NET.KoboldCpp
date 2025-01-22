@@ -25,8 +25,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
                 {
                     HttpClient = new HttpClient 
                     { 
-                        BaseAddress = new Uri(TestConfig.NativeApiBaseUrl),
-                        Timeout = TimeSpan.FromSeconds(TestConfig.TimeoutSeconds)
+                        BaseAddress = new Uri(TestConfig.NativeApiBaseUrl)
                     },
                     BaseUrl = TestConfig.BaseUrl,
                     Logger = Logger,
