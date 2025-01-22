@@ -4,8 +4,6 @@ namespace SpongeEngine.KoboldSharp
 {
     public class KoboldSharpClientOptions : LlmClientBaseOptions 
     {
-        public override string BaseUrl { get; set; } = "http://localhost:5001";
-
         // Client-side settings
         public bool MultiplayerEnabled { get; set; } = false;
         public bool WebSearchEnabled { get; set; } = false;

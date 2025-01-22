@@ -35,7 +35,10 @@ using SpongeEngine.KoboldSharp;
 // Configure the client
 var options = new KoboldSharpClientOptions
 {
-    BaseUrl = "http://localhost:5001",
+    HttpClient = new HttpClient
+    {
+        BaseAddress = new Uri("http://localhost:5001")
+    },
     // Optional client-side settings
     MultiplayerEnabled = false,
     WebSearchEnabled = false
@@ -70,8 +73,12 @@ await foreach (var token in client.GenerateStreamAsync(request))
 var options = new KoboldSharpClientOptions
 {
     // Base configuration
-    BaseUrl = "http://localhost:5001",    // KoboldCpp server URL
-    ApiKey = "optional_api_key",          // Optional API key if server requires auth
+    HttpClient = new HttpClient
+    {
+        BaseAddress = new Uri("http://localhost:5001")
+    },
+    JsonSerializerOptions = new JsonSerializerOptions(), // Optional JSON settings
+    Logger = loggerInstance,                             // Optional ILogger
     
     // Optional features
     MultiplayerEnabled = false,           // Enable multiplayer support
@@ -83,11 +90,6 @@ var options = new KoboldSharpClientOptions
     StableDiffusionUseQuantization = false,
     StableDiffusionMaxResolution = 512,
     StableDiffusionThreads = -1,
-
-    // HTTP and resilience settings
-    Timeout = TimeSpan.FromMinutes(10),
-    MaxRetryAttempts = 3,
-    RetryDelay = TimeSpan.FromSeconds(2)
 };
 ```
 
@@ -144,6 +146,47 @@ var request = new KoboldSharpRequest
 };
 ```
 
+### Additional Features
+
+#### Image Generation with Stable Diffusion
+```csharp
+// Text to image
+var txt2imgRequest = new StableDiffusionGenerationRequest
+{
+    Prompt = "A beautiful mountain landscape",
+    NegativePrompt = "blur, haze",
+    Width = 512,
+    Height = 512,
+    Steps = 20,
+    CfgScale = 7.0f,
+    SamplerName = "euler_a"
+};
+
+var txt2imgResponse = await client.TextToImageAsync(txt2imgRequest);
+
+// Image to image
+var img2imgRequest = new StableDiffusionImageToImageRequest
+{
+    InitImages = new List<string> { Convert.ToBase64String(File.ReadAllBytes("input.png")) },
+    Prompt = "Convert to oil painting",
+    DenoisingStrength = 0.75f
+};
+
+var img2imgResponse = await client.ImageToImageAsync(img2imgRequest);
+```
+
+#### Audio Transcription with Whisper
+```csharp
+var transcribeRequest = new WhisperRequest
+{
+    AudioData = Convert.ToBase64String(File.ReadAllBytes("audio.mp3")),
+    Prompt = "Optional transcription prompt",
+    SuppressNonSpeech = true
+};
+
+var transcription = await client.TranscribeAudioAsync(transcribeRequest);
+```
+
 ## Error Handling
 ```csharp
 try
@@ -174,7 +217,15 @@ ILogger logger = LoggerFactory
         .SetMinimumLevel(LogLevel.Debug))
     .CreateLogger<KoboldSharpClient>();
 
-var client = new KoboldSharpClient(options, logger);
+var options = new KoboldSharpClientOptions
+{
+    HttpClient = new HttpClient
+    {
+        BaseAddress = new Uri("http://localhost:5001")
+    },
+    Logger = logger
+};
+var client = new KoboldSharpClient(options);
 ```
 
 ## Testing
@@ -184,8 +235,8 @@ dotnet test
 ```
 
 Configure test environment:
-```csharp
-Environment.SetEnvironmentVariable("KOBOLDCPP_BASE_URL", "http://localhost:5001");
+```bash
+export KOBOLDCPP_BASE_URL="http://localhost:5001"
 ```
 
 ## License
