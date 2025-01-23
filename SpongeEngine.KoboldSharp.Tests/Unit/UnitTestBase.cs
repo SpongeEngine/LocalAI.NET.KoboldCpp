@@ -16,7 +16,10 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit
             Client = new KoboldSharpClient(
                 new KoboldSharpClientOptions() 
                 {
-                    HttpClient = new HttpClient { BaseAddress = new Uri(Server.Urls[0]) },
+                    HttpClient = new HttpClient
+                    {
+                        BaseAddress = new Uri(Server.Urls[0])
+                    },
                     BaseUrl = TestConfig.BaseUrl,
                     Logger = LoggerFactory
                         .Create(builder => builder.AddXUnit(output))
