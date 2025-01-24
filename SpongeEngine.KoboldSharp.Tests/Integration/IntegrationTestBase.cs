@@ -25,9 +25,8 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
                 {
                     HttpClient = new HttpClient 
                     { 
-                        BaseAddress = new Uri(TestConfig.NativeApiBaseUrl)
+                        BaseAddress = new Uri(TestConfig.BaseUrl)
                     },
-                    BaseUrl = TestConfig.BaseUrl,
                     Logger = Logger,
                 });
         }

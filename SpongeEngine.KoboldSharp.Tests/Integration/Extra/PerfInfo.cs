@@ -20,7 +20,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration.Extra
 
             // Assert
             result.Should().NotBeNull();
-            result.TotalGenerations.Should().BeGreaterOrEqualTo(0);
+            result.TotalGenerations.Should().BeGreaterThanOrEqualTo(0);
             result.Uptime.Should().BeGreaterThan(0);
             
             // Log performance data

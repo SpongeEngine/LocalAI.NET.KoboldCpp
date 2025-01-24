@@ -20,7 +20,6 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit
                     {
                         BaseAddress = new Uri(Server.Urls[0])
                     },
-                    BaseUrl = TestConfig.BaseUrl,
                     Logger = LoggerFactory
                         .Create(builder => builder.AddXUnit(output))
                         .CreateLogger(GetType()),
