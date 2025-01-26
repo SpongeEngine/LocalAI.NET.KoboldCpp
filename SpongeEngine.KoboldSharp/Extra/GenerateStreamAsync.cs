@@ -5,13 +5,13 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using SpongeEngine.LLMSharp.Core.Exceptions;
+using SpongeEngine.SpongeLLM.Core.Exceptions;
 
 namespace SpongeEngine.KoboldSharp
 {
     public partial class KoboldSharpClient
-    {
-                /// <summary>
+    { 
+        /// <summary>
         /// Generates text given a prompt and generation settings, with SSE streaming. Unspecified values are set to defaults.
         /// SSE streaming establishes a persistent connection, returning ongoing process in the form of message events.
         /// event: message

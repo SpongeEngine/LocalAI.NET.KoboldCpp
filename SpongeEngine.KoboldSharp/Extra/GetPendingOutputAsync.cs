@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
-using SpongeEngine.LLMSharp.Core.Exceptions;
+using SpongeEngine.SpongeLLM.Core.Exceptions;
 
 namespace SpongeEngine.KoboldSharp
 {

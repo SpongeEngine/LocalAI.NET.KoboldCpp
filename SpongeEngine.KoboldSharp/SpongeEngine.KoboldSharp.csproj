@@ -32,6 +32,7 @@
 
     <!-- Package Dependencies -->
     <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.AI" Version="9.1.0-preview.1.25064.3" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.1" Condition="'$(TargetFramework)' == 'net6.0'" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.1" Condition="'$(TargetFramework)' == 'net7.0'" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.1" Condition="'$(TargetFramework)' == 'net8.0'" />
@@ -39,14 +40,16 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.1" Condition="'$(TargetFramework)' == 'net6.0'" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.1" Condition="'$(TargetFramework)' == 'net7.0'" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.1" Condition="'$(TargetFramework)' == 'net8.0'" />
-        <PackageReference Include="OllamaSharp" Version="4.0.11" />
         <PackageReference Include="Polly" Version="8.5.1" />
-        <PackageReference Include="SpongeEngine.LLMSharp.Core" Version="2.0.1" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     </ItemGroup>
 
     <!-- Include README in the package -->
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\LLMSharp.Core\SpongeEngine.LLMSharp.Core\SpongeEngine.LLMSharp.Core.csproj" />
+      <ProjectReference Include="..\..\SpongeLLM.Core\SpongeEngine.SpongeLLM.Core\SpongeEngine.SpongeLLM.Core.csproj" />
     </ItemGroup>
 </Project>

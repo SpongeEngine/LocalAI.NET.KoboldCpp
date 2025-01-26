@@ -1,20 +1,39 @@
-﻿using System.Runtime.CompilerServices;
-using SpongeEngine.LLMSharp.Core;
-using SpongeEngine.LLMSharp.Core.Interfaces;
-using SpongeEngine.LLMSharp.Core.Models;
+﻿using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging;
+using SpongeEngine.SpongeLLM.Core;
+using SpongeEngine.SpongeLLM.Core.Interfaces;
+using SpongeEngine.SpongeLLM.Core.Models;
+using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
 namespace SpongeEngine.KoboldSharp
 {
-    public partial class KoboldSharpClient : LlmClientBase, ICompletionService
+    public partial class KoboldSharpClient : LLMClientBase, IIsAvailable, ITextCompletion, IStreamableTextCompletion, IChatClient
     {
         public override KoboldSharpClientOptions Options { get; }
-        
+
         public KoboldSharpClient(KoboldSharpClientOptions options): base(options)
         {
             Options = options;
         }
+        
+        #region IIsAvailable
+        public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                using var response = await Options.HttpClient.GetAsync(Options.HttpClient.BaseAddress, cancellationToken);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Options.Logger?.LogWarning(ex, "Availability check failed");
+                return false;
+            }
+        }
+        #endregion
 
-        public async Task<CompletionResult> CompleteAsync(CompletionRequest request, CancellationToken cancellationToken = new CancellationToken())
+        #region ITextCompletion
+        public async Task<TextCompletionResult> CompleteTextAsync(TextCompletionRequest request, CancellationToken cancellationToken = new CancellationToken())
         {
             var koboldRequest = new KoboldSharpRequest
             {
@@ -33,12 +52,12 @@ namespace SpongeEngine.KoboldSharp
             var promptTokens = await CountTokensAsync(new CountTokensRequest { Prompt = request.Prompt }, cancellationToken);
             var responseTokens = await CountTokensAsync(new CountTokensRequest { Prompt = response.Results[0].Text }, cancellationToken);
 
-            return new CompletionResult
+            return new TextCompletionResult
             {
                 Text = response.Results[0].Text,
                 ModelId = request.ModelId,
                 GenerationTime = DateTime.UtcNow - startTime,
-                TokenUsage = new CompletionTokenUsage
+                TokenUsage = new TextCompletionTokenUsage
                 {
                     PromptTokens = promptTokens.Count,
                     CompletionTokens = responseTokens.Count,
@@ -46,8 +65,10 @@ namespace SpongeEngine.KoboldSharp
                 }
             };
         }
+        #endregion
 
-        public async IAsyncEnumerable<CompletionToken> StreamCompletionAsync(CompletionRequest request, [EnumeratorCancellation] CancellationToken cancellationToken = new CancellationToken())
+        #region IStreamableTextCompletion
+        public async IAsyncEnumerable<TextCompletionToken> CompleteTextStreamAsync(TextCompletionRequest request, CancellationToken cancellationToken = new CancellationToken())
         {
             var koboldRequest = new KoboldSharpRequest
             {
@@ -63,12 +84,37 @@ namespace SpongeEngine.KoboldSharp
             {
                 var tokenCount = await CountTokensAsync(new CountTokensRequest { Prompt = token }, cancellationToken);
         
-                yield return new CompletionToken
+                yield return new TextCompletionToken
                 {
                     Text = token,
                     TokenCount = tokenCount.Count
                 };
             }
         }
+        #endregion
+
+        #region IChatClient
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ChatCompletion> CompleteAsync(IList<ChatMessage> chatMessages, ChatOptions? options = null, CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncEnumerable<StreamingChatCompletionUpdate> CompleteStreamingAsync(IList<ChatMessage> chatMessages, ChatOptions? options = null, CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new NotImplementedException();
+        }
+
+        public object? GetService(Type serviceType, object? serviceKey = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ChatClientMetadata Metadata { get; }
+        #endregion
     }
 }

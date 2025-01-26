@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using SpongeEngine.KoboldSharp.Tests.Common;
-using SpongeEngine.LLMSharp.Core;
+using SpongeEngine.SpongeLLM.Core.Interfaces;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -8,17 +8,13 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
 {
     public abstract class IntegrationTestBase : TestBase, IAsyncLifetime
     {
-        protected readonly KoboldSharpClient Client;
+        protected readonly KoboldSharpClient? Client;
         protected readonly ITestOutputHelper Output;
-        protected readonly ILogger Logger;
         protected bool ServerAvailable;
 
         protected IntegrationTestBase(ITestOutputHelper output)
         {
             Output = output;
-            Logger = LoggerFactory
-                .Create(builder => builder.AddXUnit(output))
-                .CreateLogger(GetType());
             
             Client = new KoboldSharpClient(
                 new KoboldSharpClientOptions() 
@@ -27,7 +23,9 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
                     { 
                         BaseAddress = new Uri(TestConfig.BaseUrl)
                     },
-                    Logger = Logger,
+                    Logger = LoggerFactory
+                        .Create(builder => builder.AddXUnit(output))
+                        .CreateLogger(GetType())
                 });
         }
 
@@ -36,6 +34,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
             try
             {
                 ServerAvailable = await Client.IsAvailableAsync();
+                
                 if (ServerAvailable)
                 {
                     Output.WriteLine("KoboldCpp server is available");
@@ -55,18 +54,11 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
             }
         }
 
-        public Task DisposeAsync()
+        public async Task DisposeAsync()
         {
-            if (Client is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
-            return Task.CompletedTask;
-        }
-
-        private class SkipException : Exception
-        {
-            public SkipException(string message) : base(message) { }
+            Client?.Options.HttpClient?.Dispose();
+            
+            await Task.CompletedTask;
         }
     }
 }

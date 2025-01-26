@@ -1,8 +1,8 @@
-﻿using SpongeEngine.LLMSharp.Core;
+﻿using SpongeEngine.SpongeLLM.Core;
 
 namespace SpongeEngine.KoboldSharp
 {
-    public class KoboldSharpClientOptions : LlmClientBaseOptions 
+    public class KoboldSharpClientOptions : LLMClientBaseOptions 
     {
         // Client-side settings
         public bool MultiplayerEnabled { get; set; } = false;
