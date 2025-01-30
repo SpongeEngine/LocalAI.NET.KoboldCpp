@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
@@ -22,14 +21,13 @@ namespace SpongeEngine.KoboldSharp
         /// <param name="customJsonSerializerOptions"></param>
         /// <returns></returns>
         /// <exception cref="LlmSharpException"></exception>
-        public async IAsyncEnumerable<string> GenerateStreamAsync(KoboldSharpClient.KoboldSharpRequest request, [EnumeratorCancellation] CancellationToken cancellationToken = default, JsonSerializerOptions? customJsonSerializerOptions = null)
+        public async IAsyncEnumerable<string> GenerateStreamAsync(KoboldSharpClient.KoboldSharpRequest request, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             request.Stream = true;
             
-            JsonSerializerOptions jsonSerializerOptions = customJsonSerializerOptions ?? Options.JsonSerializerOptions;
-
             using HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/extra/generate/stream");
-            httpRequest.Content = JsonContent.Create(request, options: jsonSerializerOptions);
+            var serializedJson = JsonSerializer.Serialize(request, Options.JsonSerializerOptions);
+            httpRequest.Content = new StringContent(serializedJson, Encoding.UTF8, "application/json");
             httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
 
             using HttpResponseMessage? httpResponse = await Options.HttpClient.SendAsync(

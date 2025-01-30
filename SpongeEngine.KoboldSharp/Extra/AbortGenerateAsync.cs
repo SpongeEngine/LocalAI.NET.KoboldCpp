@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using SpongeEngine.SpongeLLM.Core.Exceptions;
@@ -23,7 +23,8 @@ namespace SpongeEngine.KoboldSharp
                 using HttpRequestMessage httpRequest = new(HttpMethod.Post, "api/extra/abort");
                 if (!string.IsNullOrEmpty(genKey))
                 {
-                    httpRequest.Content = JsonContent.Create(new { genkey = genKey });
+                    var serializedJson = JsonSerializer.Serialize(new { genkey = genKey }, Options.JsonSerializerOptions);
+                    httpRequest.Content = new StringContent(serializedJson, Encoding.UTF8, "application/json");
                 }
                 
                 using HttpResponseMessage? response = await Options.HttpClient.SendAsync(httpRequest, cancellationToken);

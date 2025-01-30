@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using SpongeEngine.SpongeLLM.Core.Exceptions;
@@ -36,7 +36,8 @@ namespace SpongeEngine.KoboldSharp
             try
             {
                 using HttpRequestMessage httpRequest = new(HttpMethod.Post, "api/extra/websearch");
-                httpRequest.Content = JsonContent.Create(new WebSearchRequest { Query = query });
+                var serializedJson = JsonSerializer.Serialize(new WebSearchRequest { Query = query }, Options.JsonSerializerOptions);
+                httpRequest.Content = new StringContent(serializedJson, Encoding.UTF8, "application/json");
                 
                 using HttpResponseMessage? response = await Options.HttpClient.SendAsync(httpRequest, cancellationToken);
                 string? content = await response.Content.ReadAsStringAsync(cancellationToken);

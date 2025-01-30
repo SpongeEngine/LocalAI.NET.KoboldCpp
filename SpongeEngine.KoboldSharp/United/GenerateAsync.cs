@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
@@ -17,16 +17,16 @@ namespace SpongeEngine.KoboldSharp
         /// <param name="customJsonSerializerOptions"></param>
         /// <returns></returns>
         /// <exception cref="LlmSharpException"></exception>
-        public async Task<GenerateAsyncResponse> GenerateAsync(KoboldSharpRequest request, CancellationToken cancellationToken = default, JsonSerializerOptions? customJsonSerializerOptions = null)
+        public async Task<GenerateAsyncResponse> GenerateAsync(KoboldSharpRequest request, CancellationToken cancellationToken = default)
         {
             //KoboldCppUtils.ValidateRequest(request);
             
-            JsonSerializerOptions jsonSerializerOptions = customJsonSerializerOptions ?? Options.JsonSerializerOptions;
-
             try
             {
                 using HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/v1/generate");
-                httpRequest.Content = JsonContent.Create(request, options: jsonSerializerOptions);
+                var serializedJson = JsonSerializer.Serialize(request, Options.JsonSerializerOptions);
+                httpRequest.Content = new StringContent(serializedJson, Encoding.UTF8, "application/json");
+                
                 using HttpResponseMessage? httpResponse = await Options.HttpClient.SendAsync(
                     httpRequest,
                     HttpCompletionOption.ResponseHeadersRead,
@@ -46,7 +46,7 @@ namespace SpongeEngine.KoboldSharp
                 }
 
                 try {
-                    GenerateAsyncResponse? result = JsonSerializer.Deserialize<GenerateAsyncResponse>(responseContent, jsonSerializerOptions);
+                    GenerateAsyncResponse? result = JsonSerializer.Deserialize<GenerateAsyncResponse>(responseContent, Options.JsonSerializerOptions);
                     if (result == null)
                     {
                         Options.Logger?.LogError("Deserialized response is null");

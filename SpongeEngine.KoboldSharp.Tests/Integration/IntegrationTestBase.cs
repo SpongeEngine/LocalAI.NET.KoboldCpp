@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using SpongeEngine.KoboldSharp.Tests.Common;
-using SpongeEngine.SpongeLLM.Core.Interfaces;
 using Xunit;
 using Xunit.Abstractions;
 
