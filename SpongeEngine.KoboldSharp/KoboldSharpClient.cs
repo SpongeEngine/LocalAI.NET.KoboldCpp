@@ -49,20 +49,20 @@ namespace SpongeEngine.KoboldSharp
             var response = await GenerateAsync(koboldRequest, cancellationToken);
 
             // Get token counts using KoboldCpp's token counting API
-            var promptTokens = await CountTokensAsync(new CountTokensRequest { Prompt = request.Prompt }, cancellationToken);
-            var responseTokens = await CountTokensAsync(new CountTokensRequest { Prompt = response.Results[0].Text }, cancellationToken);
+            // var promptTokens = await CountTokensAsync(new CountTokensRequest { Prompt = request.Prompt }, cancellationToken);
+            // var responseTokens = await CountTokensAsync(new CountTokensRequest { Prompt = response.Results[0].Text }, cancellationToken);
 
             return new TextCompletionResult
             {
                 Text = response.Results[0].Text,
                 ModelId = request.ModelId,
                 GenerationTime = DateTime.UtcNow - startTime,
-                TokenUsage = new TextCompletionTokenUsage
-                {
-                    PromptTokens = promptTokens.Count,
-                    CompletionTokens = responseTokens.Count,
-                    TotalTokens = promptTokens.Count + responseTokens.Count
-                }
+                // TokenUsage = new TextCompletionTokenUsage
+                // {
+                //     PromptTokens = promptTokens.Count,
+                //     CompletionTokens = responseTokens.Count,
+                //     TotalTokens = promptTokens.Count + responseTokens.Count
+                // }
             };
         }
         #endregion
