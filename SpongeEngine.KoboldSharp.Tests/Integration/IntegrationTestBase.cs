@@ -20,7 +20,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Integration
                 {
                     HttpClient = new HttpClient 
                     { 
-                        BaseAddress = new Uri(TestConfig.BaseUrl)
+                        BaseAddress = new Uri(TestConfig.BaseAddress)
                     },
                     Logger = LoggerFactory
                         .Create(builder => builder.AddXUnit(output))
