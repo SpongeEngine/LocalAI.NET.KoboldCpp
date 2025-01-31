@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using SpongeEngine.SpongeLLM.Core.Exceptions;
+using SpongeEngine.LLMSharp.Core.Exceptions;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using Xunit;
@@ -121,7 +121,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
 
             // Act & Assert
             await Client.Invoking(c => c.ImageToImageAsync(request))
-                .Should().ThrowAsync<LlmSharpException>()
+                .Should().ThrowAsync<SpongeLLMException>()
                 .WithMessage("Failed to generate image from image");
         }
 
@@ -145,7 +145,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
 
             // Act & Assert
             await Client.Invoking(c => c.ImageToImageAsync(request))
-                .Should().ThrowAsync<LlmSharpException>()
+                .Should().ThrowAsync<SpongeLLMException>()
                 .WithMessage("Failed to generate image from image");
         }
 
@@ -169,7 +169,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
 
             // Act & Assert
             await Client.Invoking(c => c.ImageToImageAsync(request))
-                .Should().ThrowAsync<LlmSharpException>()
+                .Should().ThrowAsync<SpongeLLMException>()
                 .WithMessage("Failed to generate image from image");
         }
     }

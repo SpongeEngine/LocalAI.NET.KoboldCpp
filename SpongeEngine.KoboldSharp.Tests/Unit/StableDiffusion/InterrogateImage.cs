@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using SpongeEngine.SpongeLLM.Core.Exceptions;
+using SpongeEngine.LLMSharp.Core.Exceptions;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using Xunit;
@@ -58,7 +58,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
 
             // Act & Assert
             await Client.Invoking(c => c.InterrogateImageAsync(request))
-                .Should().ThrowAsync<LlmSharpException>()
+                .Should().ThrowAsync<SpongeLLMException>()
                 .WithMessage("Failed to interrogate image");
         }
 
@@ -81,7 +81,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
 
             // Act & Assert
             await Client.Invoking(c => c.InterrogateImageAsync(request))
-                .Should().ThrowAsync<LlmSharpException>()
+                .Should().ThrowAsync<SpongeLLMException>()
                 .WithMessage("Failed to interrogate image");
         }
 
@@ -104,7 +104,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
 
             // Act & Assert
             await Client.Invoking(c => c.InterrogateImageAsync(request))
-                .Should().ThrowAsync<LlmSharpException>()
+                .Should().ThrowAsync<SpongeLLMException>()
                 .WithMessage("Failed to interrogate image");
         }
 
@@ -127,7 +127,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.StableDiffusion
 
             // Act & Assert
             await Client.Invoking(c => c.InterrogateImageAsync(request))
-                .Should().ThrowAsync<LlmSharpException>()
+                .Should().ThrowAsync<SpongeLLMException>()
                 .WithMessage("Failed to interrogate image");
         }
     }

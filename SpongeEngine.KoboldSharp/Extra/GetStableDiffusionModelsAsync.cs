@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using SpongeEngine.SpongeLLM.Core.Exceptions;
+using SpongeEngine.LLMSharp.Core.Exceptions;
 
 namespace SpongeEngine.KoboldSharp
 {
@@ -33,7 +33,7 @@ namespace SpongeEngine.KoboldSharp
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new LlmSharpException(
+                    throw new SpongeLLMException(
                         "Failed to get Stable Diffusion models",
                         (int)response.StatusCode,
                         content);
@@ -41,9 +41,9 @@ namespace SpongeEngine.KoboldSharp
 
                 return JsonSerializer.Deserialize<List<StableDiffusionModelInfo>>(content) ?? new List<StableDiffusionModelInfo>();
             }
-            catch (Exception ex) when (ex is not LlmSharpException)
+            catch (Exception ex) when (ex is not SpongeLLMException)
             {
-                throw new LlmSharpException("Failed to get Stable Diffusion models", innerException: ex);
+                throw new SpongeLLMException("Failed to get Stable Diffusion models", innerException: ex);
             }
         }
     }

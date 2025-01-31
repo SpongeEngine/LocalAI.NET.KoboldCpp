@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using SpongeEngine.SpongeLLM.Core.Exceptions;
+using SpongeEngine.LLMSharp.Core.Exceptions;
 
 namespace SpongeEngine.KoboldSharp
 {
@@ -47,17 +47,17 @@ namespace SpongeEngine.KoboldSharp
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new LlmSharpException(
+                    throw new SpongeLLMException(
                         "Failed to get multiplayer status",
                         (int)response.StatusCode,
                         content);
                 }
 
-                return JsonSerializer.Deserialize<MultiplayerStatusResponse>(content) ?? throw new LlmSharpException("Failed to deserialize multiplayer status response");
+                return JsonSerializer.Deserialize<MultiplayerStatusResponse>(content) ?? throw new SpongeLLMException("Failed to deserialize multiplayer status response");
             }
-            catch (Exception ex) when (ex is not LlmSharpException)
+            catch (Exception ex) when (ex is not SpongeLLMException)
             {
-                throw new LlmSharpException("Failed to get multiplayer status", innerException: ex);
+                throw new SpongeLLMException("Failed to get multiplayer status", innerException: ex);
             }
         }
     }

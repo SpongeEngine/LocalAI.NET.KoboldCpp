@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using SpongeEngine.SpongeLLM.Core.Exceptions;
+using SpongeEngine.LLMSharp.Core.Exceptions;
 
 namespace SpongeEngine.KoboldSharp
 {
@@ -40,7 +40,7 @@ namespace SpongeEngine.KoboldSharp
             if (!httpResponse.IsSuccessStatusCode)
             {
                 Options.Logger?.LogError("Non-success status code: {Status}", httpResponse.StatusCode);
-                throw new LlmSharpException(
+                throw new SpongeLLMException(
                     "Generation request failed",
                     (int)httpResponse.StatusCode,
                     responseContent);

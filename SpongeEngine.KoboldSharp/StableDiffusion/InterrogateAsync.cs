@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using SpongeEngine.SpongeLLM.Core.Exceptions;
+using SpongeEngine.LLMSharp.Core.Exceptions;
 
 namespace SpongeEngine.KoboldSharp
 {
@@ -35,17 +35,17 @@ namespace SpongeEngine.KoboldSharp
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new LlmSharpException(
+                    throw new SpongeLLMException(
                         "Failed to interrogate image",
                         (int)response.StatusCode,
                         content);
                 }
 
-                return JsonSerializer.Deserialize<InterrogateResponse>(content) ?? throw new LlmSharpException("Failed to deserialize interrogate response");
+                return JsonSerializer.Deserialize<InterrogateResponse>(content) ?? throw new SpongeLLMException("Failed to deserialize interrogate response");
             }
-            catch (Exception ex) when (ex is not LlmSharpException)
+            catch (Exception ex) when (ex is not SpongeLLMException)
             {
-                throw new LlmSharpException("Failed to interrogate image", innerException: ex);
+                throw new SpongeLLMException("Failed to interrogate image", innerException: ex);
             }
         }
     }

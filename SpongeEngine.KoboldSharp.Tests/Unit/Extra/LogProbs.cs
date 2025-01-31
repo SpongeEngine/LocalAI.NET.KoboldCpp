@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using SpongeEngine.SpongeLLM.Core.Exceptions;
+using SpongeEngine.LLMSharp.Core.Exceptions;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using Xunit;
@@ -105,7 +105,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.Extra
 
             // Act & Assert
             await Client.Invoking(c => c.GetLastLogProbsAsync())
-                .Should().ThrowAsync<LlmSharpException>()
+                .Should().ThrowAsync<SpongeLLMException>()
                 .WithMessage("Failed to get last log probabilities");
         }
     }

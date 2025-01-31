@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using SpongeEngine.SpongeLLM.Core.Exceptions;
+using SpongeEngine.LLMSharp.Core.Exceptions;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using Xunit;
@@ -97,7 +97,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.Multiplayer
 
             // Act & Assert
             await Client.Invoking(c => c.GetMultiplayerStatusAsync(request))
-                .Should().ThrowAsync<LlmSharpException>()
+                .Should().ThrowAsync<SpongeLLMException>()
                 .WithMessage("Failed to get multiplayer status");
         }
 
@@ -121,7 +121,7 @@ namespace SpongeEngine.KoboldSharp.Tests.Unit.Multiplayer
 
             // Act & Assert
             await Client.Invoking(c => c.GetMultiplayerStatusAsync(request))
-                .Should().ThrowAsync<LlmSharpException>()
+                .Should().ThrowAsync<SpongeLLMException>()
                 .WithMessage("Failed to get multiplayer status");
         }
 

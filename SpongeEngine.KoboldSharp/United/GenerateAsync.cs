@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using SpongeEngine.SpongeLLM.Core.Exceptions;
+using SpongeEngine.LLMSharp.Core.Exceptions;
 
 namespace SpongeEngine.KoboldSharp
 {
@@ -39,7 +39,7 @@ namespace SpongeEngine.KoboldSharp
                 if (!httpResponse.IsSuccessStatusCode)
                 {
                     Options.Logger?.LogError("Non-success status code: {Status}", httpResponse.StatusCode);
-                    throw new LlmSharpException(
+                    throw new SpongeLLMException(
                         "Generation request failed",
                         (int)httpResponse.StatusCode,
                         responseContent);
@@ -50,7 +50,7 @@ namespace SpongeEngine.KoboldSharp
                     if (result == null)
                     {
                         Options.Logger?.LogError("Deserialized response is null");
-                        throw new LlmSharpException(
+                        throw new SpongeLLMException(
                             "Null response after deserialization",
                             null,
                             responseContent);
@@ -59,7 +59,7 @@ namespace SpongeEngine.KoboldSharp
                     if (result.Results == null || !result.Results.Any())
                     {
                         Options.Logger?.LogError("Response has no results");
-                        throw new LlmSharpException(
+                        throw new SpongeLLMException(
                             "No results in response",
                             null,
                             responseContent);
@@ -70,16 +70,16 @@ namespace SpongeEngine.KoboldSharp
                 catch (JsonException ex)
                 {
                     Options.Logger?.LogError(ex, "Failed to deserialize response: {Response}", responseContent);
-                    throw new LlmSharpException(
+                    throw new SpongeLLMException(
                         "Failed to deserialize response",
                         null,
                         $"Response: {responseContent}, Error: {ex.Message}");
                 }
             }
-            catch (Exception ex) when (ex is not LlmSharpException)
+            catch (Exception ex) when (ex is not SpongeLLMException)
             {
                 Options.Logger?.LogError(ex, "Failed to generate response");
-                throw new LlmSharpException("Failed to generate response", null, ex.Message);
+                throw new SpongeLLMException("Failed to generate response", null, ex.Message);
             }
         }
         

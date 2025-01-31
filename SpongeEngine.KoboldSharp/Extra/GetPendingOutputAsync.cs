@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
-using SpongeEngine.SpongeLLM.Core.Exceptions;
+using SpongeEngine.LLMSharp.Core.Exceptions;
 
 namespace SpongeEngine.KoboldSharp
 {
@@ -22,7 +22,7 @@ namespace SpongeEngine.KoboldSharp
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new LlmSharpException(
+                    throw new SpongeLLMException(
                         "Failed to get pending output",
                         (int)response.StatusCode,
                         content);
@@ -31,9 +31,9 @@ namespace SpongeEngine.KoboldSharp
                 var result = JsonSerializer.Deserialize<GenerateAsyncResponse>(content);
                 return result?.Results.FirstOrDefault()?.Text ?? string.Empty;
             }
-            catch (Exception ex) when (ex is not LlmSharpException)
+            catch (Exception ex) when (ex is not SpongeLLMException)
             {
-                throw new LlmSharpException("Failed to get pending output", innerException: ex); 
+                throw new SpongeLLMException("Failed to get pending output", innerException: ex); 
             }
         }
     }
